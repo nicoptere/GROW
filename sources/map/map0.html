@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>map</title>
+</head>
+<body>
+
+    <script src="../code/random/PRNG.js"></script>
+    <!--avec 100 points ajoutés progressivement à partir d'un point existant choisi aléatoirement. 98 points ont un parent et un enfant ; but u jeu, retrouver son parent et son enfant.-->
+    <script>
+
+        var canvas, ctx, noise, width, height, particles, offset, imgData, data, ds;
+        var Point = function(x,y){
+            this.x = x||0;
+            this.y = y||0;
+            this.lx = x;
+            this.ly = y;
+        };
+
+        function distance( a,b){
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            return dx*dx + dy*dy;
+        }
+
+        function init(){
+
+            canvas = document.createElement("canvas");
+            document.body.appendChild( canvas );
+            ctx = canvas.getContext("2d");
+
+            ds = 1;
+            width = canvas.width = window.innerWidth / ds;
+            height = canvas.height = window.innerHeight / ds;
+            particles = [];
+
+            noise = document.createElement("canvas");
+            var scale = 4;
+            noise.width = width / scale;
+            noise.height = height / scale;
+            randomNoise( noise );
+
+            perlinNoise(canvas, offset);
+            imgData = canvas.getContext("2d").getImageData(0,0,width,height);
+            data = imgData.data;
+
+            ctx.clearRect(0, 0, width, height);
+            canvas.width *= ds;
+            canvas.height *= ds;
+            _addNewPoint();
+            _oef();
+        }
+
+        var extra = 50;
+        var iteration = 0;
+        function _oef() {
+
+
+            if (particles.length < 100 && PRNG.random() < .5)_addNewPoint();
+            if (particles.length < 100 ){
+                requestAnimationFrame( _oef );
+            }else{
+
+                extra--;
+                if( extra <=0 ){
+                    ctx.globalCompositeOperation = "source-over";
+
+                    ctx.beginPath();
+                    for( var i = 1; i < particles.length; i++) {
+                        var p = particles[i].parent;
+                        var c = particles[i];
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(c.x, c.y);
+                    }
+                    ctx.stroke();
+                    for( var i = 1; i < particles.length; i++){
+
+                        var c = particles[i];
+                        ctx.fillStyle = "#FFF";
+                        ctx.beginPath();
+                        ctx.arc( c.x, c.y, 20, 0, Math.PI * 2 );
+                        ctx.fill();
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.fillStyle = "#000";
+                        ctx.font="16px Verdana";
+                        ctx.fillText( i, c.x - 8, c.y + 6 );
+
+                    };
+
+                    return
+                }else{
+                    requestAnimationFrame( _oef );
+                }
+            }
+
+            if( iteration++ % 20 == 0 ){
+
+                ctx.beginPath();
+                for( var i = 1; i < particles.length; i++) {
+                    var p = particles[i].parent;
+                    var c = particles[i];
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(c.x, c.y);
+                }
+                ctx.stroke();
+            }
+
+
+            particles.forEach(function (c) {
+
+                var id = parseInt( c.x / ds ) + parseInt(c.y * width /ds );
+                var r = data[id];
+                var g = data[id+1];
+                c.x += ( ( 0x7F - r ) / 0x80 ) * .1;
+                c.y += ( ( 0x7F - g ) / 0x80 ) * .1;
+
+            });
+
+
+            //repulsion
+
+            ctx.lineCap = "round";
+            var dist = 100;// + (.5 +.5 * Math.sin( Date.now() * 0.001 ) ) * 50;
+            var dist2 = dist * dist;
+
+            ctx.beginPath();
+            for( var i = 0; i < particles.length; i++){
+
+                var c = particles[i];
+
+                c.lx = c.x;
+                c.ly = c.y;
+
+                for (var j = i + 1; j < particles.length; j++) {
+                    var b = particles[j];
+                    if (distance(c, b) < dist2) {
+                        var ang = Math.atan2(c.y - b.y, c.x - b.x);
+                        c.x += ((b.x + Math.cos(ang) * dist ) - c.x) * .5;
+                        c.y += ((b.y + Math.sin(ang) * dist ) - c.y) * .5;
+                    }
+                }
+
+                ctx.moveTo(c.lx, c.ly);
+                ctx.lineTo(c.x, c.y);
+
+            }
+//            ctx.lineWidth = 5;
+//            ctx.strokeStyle = "#000";
+            ctx.stroke();
+
+
+             ctx.globalCompositeOperation = "lighter";
+             ctx.fillStyle = "rgba( 255,255,255, "+(1/0xFF)+" )";
+             ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.globalCompositeOperation = "source-over";
+
+        }
+
+        function _addNewPoint()
+        {
+            if( particles.length == 0 ){
+//                return particles.push( new Point(PRNG.random() * canvas.width, PRNG.random() * canvas.height));
+                return particles.push( new Point(canvas.width/2, canvas.height - canvas.height/4 ));
+            }
+            var p = particles[ parseInt( PRNG.random() * particles.length ) ];
+//            var p = particles[ particles.length - 1 ];
+            var n = new Point(p.x, p.y+1);
+            n.parent = p;
+            particles.push(n);
+        }
+
+        function randomNoise(canvas, x, y, width, height, alpha) {
+            x = x || 0;
+            y = y || 0;
+            width = width || canvas.width;
+            height = height || canvas.height;
+            alpha = alpha || 255;
+            var g = canvas.getContext("2d"),
+                imageData = g.getImageData(x, y, width, height),
+                pixels = imageData.data,
+                n = pixels.length,
+                i = 0;
+            while (i < n) {
+                pixels[i++] = (PRNG.random() * 256) | 0;
+                pixels[i++] = (PRNG.random() * 256) | 0;
+                pixels[i++] = (PRNG.random() * 256) | 0;
+                pixels[i++] = alpha;
+            }
+            g.putImageData(imageData, x, y);
+            return canvas;
+        }
+
+        function perlinNoise( canvas )
+        {
+            var g = canvas.getContext("2d");
+            g.save();
+            for (var size = 4; size <= noise.width; size *= 2) {
+                var x = (PRNG.random() * (noise.width - size)) | 0;
+                var y = (PRNG.random() * (noise.height - size)) | 0;
+                g.globalAlpha = 4 / size;
+                g.drawImage(noise, x, y, size, size, 0, 0, canvas.width, canvas.height);
+            }
+            g.restore();
+            return canvas;
+        }
+        init();
+    </script>
+</body>
+</html>

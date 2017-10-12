@@ -1,0 +1,7 @@
+{
+  "name": "grow17",
+  "version": "0.0.1",
+  "dependencies": {
+    "canvas" : "^1.6.7"
+  }
+}

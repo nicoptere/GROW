@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+            top:0;
+            left:0;
+            margin:0;
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+    <script src ="../utils/D3.js"></script>
+    <script src ="../utils/Point.js"></script>
+    <script src ="../utils/PRNG.js"></script>
+    <script>
+
+        var RAD = Math.PI / 180;
+        var canvas = document.createElement( 'canvas' );
+        document.body.appendChild( canvas );
+        var w = canvas.width = window.innerWidth;
+        var h = canvas.height = window.innerHeight;
+        var ctx = canvas.getContext("2d");
+
+        var vertices = [];
+        var indices = [];
+
+        var mesh = function(v,i,n){
+            this.vertices = v;
+            this.indices = i;
+            this.normals = n;
+            this.indicesPerNGon = 3;
+            this.position = new Point();
+            this.scale = new Point();
+            this.rotation = new Point();
+            return this;
+        };
+
+        for( var i = 0; i < 100; i++ ){
+
+                var p = new Point( PRNG.random()-.5, PRNG.random()-.5, PRNG.random()-.5 );
+                p.multiplyScalar( 10 );
+                vertices.push( p );
+
+            for( var j = 0; j < 100; j++ ){
+            }
+        }
+
+        for( i = 0; i < 10; i++ ){
+            indices.push(
+                ~~( PRNG.random() * vertices.length ),
+                ~~( PRNG.random() * vertices.length ),
+                ~~( PRNG.random() * vertices.length )
+            );
+        }
+
+        var m = new mesh(vertices, indices);
+        function update(){
+            requestAnimationFrame(update);
+            D3.focalDistance = 100;// + Math.sin( Date.now() * 0.001 ) * 500;
+//            m.position.y = Math.sin( Date.now() * 0.001 ) * 50;
+            D3.render( [ m ], ctx )
+        }
+        update();
+
+    </script>
+</body>
+</html>

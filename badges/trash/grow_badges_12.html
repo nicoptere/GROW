@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>badges</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <script src="../../code/Point.js"></script>
+    <script src="../../code/utils/geomUtils.js"></script>
+    <script src="../../code/utils/Graphics.js"></script>
+    <script src="../../code/utils/Delaunator.js"></script>
+    <script src="../../code/utils/voronoi.js"></script>
+    <script src="../../code/random/PRNG.js"></script>
+
+    <script>
+
+        function lerp ( t, a, b ){ return a * (1-t) + b * t; }
+        function norm( t, a, b ){return ( t - a ) / ( b - a );}
+        function map( t, a0, b0, a1, b1 ){ return lerp( norm( t, a0, b0 ), a1, b1 );}
+
+        var img = new Image();
+        img.onload = function(){
+            render();
+        };
+        img.src= "white_title.png";
+
+        function render(){
+
+            var g = new Graphics();
+            PRNG.setSeed(Date.now());
+
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var s = 1000;//Math.min( w, h );
+            g.ctx = g.getContext( s, s );
+            var ctx = g.ctx;
+            document.body.appendChild(g.ctx.canvas);
+
+            ctx.save();
+            ctx.translate( s/2, s/2 );
+            ctx.scale( 1.,  0.5);
+            ctx.rotate( Math.PI / 4 );
+            ctx.translate(-s/2, -s/2 );
+
+            var step = s / 100;
+            ctx.globalAlpha = .1;
+            ctx.beginPath();
+            for( var i = 0; i <= s; i += step ){
+                ctx.moveTo( i, 0);
+                ctx.lineTo( i, s);
+                ctx.moveTo( 0, i);
+                ctx.lineTo( s, i);
+            }
+            ctx.stroke();
+
+            var sca = 0.005;
+            var oct = 8;
+            var amp = 100;
+
+            ctx.globalAlpha = .5;
+            ctx.beginPath();
+            for( i = 0; i <= s; i += step * 2 ){
+                for( var j = 0; j <= s; j += step * 2 ){
+
+                    var n = PRNG.FBM( i * sca, j * sca, oct );
+                    var offset = ( n ) * amp;
+                    g.disc( i - offset, j - offset , Math.abs(1+n ) * 3  );
+
+                }
+            }
+
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            for( i = 0; i <= s; i += step ){
+
+                for( j = 0; j <= s; j += step ){
+
+                    n = PRNG.FBM( i * sca, j * sca, oct );
+                    offset = ( n ) * amp * Math.abs( n * n *n);
+                    ctx.moveTo( i - offset, j - offset );
+                    ctx.lineTo( i, j );
+
+                }
+            }
+            ctx.stroke();
+
+            ctx.restore();
+            g.ctx.globalAlpha = .1;
+            ctx.fillRect( 0,0,s,s );
+
+            g.ctx.globalAlpha = 1;
+            ctx.drawImage(img, 0, 0, img.width, img.height,0,0,s,s );
+        }
+
+    </script>
+
+</body>
+</html>

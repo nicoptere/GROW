@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>badges</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <script src="../../code/Point.js"></script>
+    <script src="../../code/utils/geomUtils.js"></script>
+    <script src="../../code/utils/Graphics.js"></script>
+    <script src="../../code/utils/Delaunator.js"></script>
+    <script src="../../code/random/PRNG.js"></script>
+
+    <script>
+
+        function lerp ( t, a, b ){ return a * (1-t) + b * t; }
+        function norm( t, a, b ){return ( t - a ) / ( b - a );}
+        function map( t, a0, b0, a1, b1 ){ return lerp( norm( t, a0, b0 ), a1, b1 );}
+
+        var img = new Image();
+        img.onload = function(){
+            render();
+        };
+        img.src= "white_title.png";
+
+        function render(){
+
+            var g = new Graphics();
+
+            PRNG.setSeed(Date.now())
+
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var s = 1000;//Math.min( w, h );
+            g.ctx = g.getContext( s, s );
+            var ctx = g.ctx;
+            document.body.appendChild(g.ctx.canvas);
+
+
+            g.ctx.globalAlpha = 1;
+            var count = 50;
+            var cellSize = s/count;
+            ctx.beginPath();
+
+
+            var turns = 5;
+            var total = Math.PI * 2  * turns;
+            var minRadius = s/5;
+            var maxRadius = minRadius + s/5;
+            var ga = ( ( 1 + Math.sqrt(5) ) / 2 ) / 5;
+            var points = [];
+            var i=0;
+            ctx.save();
+            ctx.translate( s/2,s/2 );
+            for ( var angle = 0; angle <= total; angle+=ga ){
+
+                var radius = map( angle, 0, total, minRadius, maxRadius );
+                var x = Math.cos( angle ) * radius * .75;
+                var y = Math.sin( angle ) * radius;
+                points.push([x,y]);
+
+//                g.disc( x,y, 2 );
+                ctx.moveTo(x,y);
+                var sca = .0005;
+                var ang = ( PRNG.FBM( x * sca, y * sca ) * Math.PI * 4 ) + PRNG.random();
+
+                x += Math.cos( ang ) * radius * .25;
+                y += Math.sin( ang ) * radius * .25;
+                ctx.lineTo(x,y);
+//                ctx.stroke();
+                console.log( i++ );
+
+                points.push([x,y]);
+
+
+            }
+
+            var delaunay = new Delaunator( points );
+            var tris = delaunay.triangles;
+            var centers = [];
+            ctx.beginPath();
+            for( i = 0; i < tris.length; ){
+
+                if( PRNG.random() > .5 ){
+                    i+=3;
+                    continue;
+                }
+
+                var a = tris[i++];
+                var b = tris[i++];
+                var c = tris[i++];
+
+                var dt = drawTri( ctx, points, a,b,c );
+                if( dt === false ){
+
+                    var pa = new Point(points[a][0], points[a][1]);
+                    var pb = new Point(points[b][0], points[b][1]);
+                    var pc = new Point(points[c][0], points[c][1]);
+
+                    var da = geomUtils.distance( pb,pc );
+                    var db = geomUtils.distance( pa,pc );
+                    var dc = geomUtils.distance( pa,pb );
+                    var pe = da+db+dc;
+
+                    //incenter
+                    var ix = ( da* pa.x + db * pb.x + dc * pc.x ) / pe;
+                    var iy = ( da* pa.y + db * pb.y + dc * pc.y ) / pe;
+                    console.log( da, db, dc, pe, ix, iy )
+
+
+                    //centroid
+                    var cx = ( points[a][0] + points[b][0] + points[c][0] ) / 3;
+                    var cy = ( points[a][1] + points[b][1] + points[c][1] ) / 3;
+
+                    var p = new Point( ix, iy );
+                    p.radius = Math.min(
+                        geomUtils.distance( p, geomUtils.project( p, pa,pb ) ),
+                        Math.min(
+                            geomUtils.distance( p, geomUtils.project( p, pb,pc ) ),
+                            geomUtils.distance( p, geomUtils.project( p, pc,pa ) )
+                        )
+                    );
+                    centers.push( p );
+                }
+
+            }
+            ctx.stroke();
+            centers.forEach( function(p,i){
+
+
+                g.circle(p,p.radius );//20*i/centers.length);
+            } );
+            console.log( tris )
+
+            ctx.restore();
+            g.ctx.globalAlpha = .1;
+            ctx.fillRect( 0,0,s,s );
+
+            g.ctx.globalAlpha = 1;
+            ctx.drawImage(img, 0, 0, img.width, img.height,0,0,s,s );
+
+        }
+
+        function drawTri( ctx, ps, a, b, c ){
+
+
+            ctx.moveTo(ps[a][0], ps[a][1]);
+            ctx.lineTo(ps[b][0], ps[b][1]);
+            ctx.lineTo(ps[c][0], ps[c][1]);
+            ctx.lineTo(ps[a][0], ps[a][1]);
+
+//            if( PRNG.random() > .35 )
+                return false;
+
+//            if( PRNG.random() > .5 )return;
+
+            var cx0 = lerp( .25,ps[a][0], ps[b][0]);
+            var cy0 = lerp( .25,ps[a][1], ps[b][1]);
+            var cx00 = lerp( .75,ps[a][0], ps[b][0]);
+            var cy00 = lerp( .75,ps[a][1], ps[b][1]);
+
+            var cx1 = lerp( .25,ps[b][0], ps[c][0]);
+            var cy1 = lerp( .25,ps[b][1], ps[c][1]);
+            var cx10 = lerp( .75,ps[b][0], ps[c][0]);
+            var cy10 = lerp( .75,ps[b][1], ps[c][1]);
+
+            var cx2 = lerp( .25,ps[c][0], ps[a][0]);
+            var cy2 = lerp( .25,ps[c][1], ps[a][1]);
+            var cx20 = lerp( .75,ps[c][0], ps[a][0]);
+            var cy20 = lerp( .75,ps[c][1], ps[a][1]);
+
+            ctx.moveTo( cx00, cy00 );
+            ctx.lineTo( cx1, cy1 );
+
+            ctx.moveTo( cx10, cy10 );
+            ctx.lineTo( cx2, cy2 );
+
+            ctx.moveTo( cx20, cy20 );
+            ctx.lineTo( cx0, cy0 );
+
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>badges</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <script src="../../code/Point.js"></script>
+    <script src="../../code/utils/geomUtils.js"></script>
+    <script src="../../code/utils/Graphics.js"></script>
+    <script src="../../code/random/PRNG.js"></script>
+
+    <script>
+
+        function lerp ( t, a, b ){ return a * (1-t) + b * t; }
+        function norm( t, a, b ){return ( t - a ) / ( b - a );}
+        function map( t, a0, b0, a1, b1 ){ return lerp( norm( t, a0, b0 ), a1, b1 );}
+
+
+        var g = new Graphics();
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var s = 1000;//Math.min( w, h );
+        g.ctx = g.getContext( s, s );
+        var ctx = g.ctx;
+        document.body.appendChild(g.ctx.canvas);
+
+
+        g.ctx.globalAlpha = .1;
+        var cellSize = s/10;
+        for( var i = 0; i < 10; i++ ){
+
+            for ( var j = 0; j < 10; j++ ){
+
+                g.ctx.strokeRect( i * cellSize, j * cellSize, cellSize, cellSize );
+
+            }
+        }
+
+
+        ctx.save();
+//        g.ctx.globalAlpha = 1;
+        ctx.translate( s/2, s/2 );
+
+        PRNG.setSeed( 18112017 );
+
+        var turns = 100;
+        var res = 10;
+        var step = Math.PI*2/ ( res * turns );
+        var angle = 0;
+        var radius = s / Math.sqrt( 2 );
+
+        var points = [];
+        var bins = [];
+        ctx.beginPath();
+        for( i = 0; i < turns * res; ){
+
+            radius = lerp( Math.sqrt( norm( i, 0, turns * res ) ) , 0, s/Math.sqrt( 2 ) );
+
+            var p = new Point( Math.cos( i ) * radius, Math.sin( i ) * radius );
+
+            p.cx = ~~( p.x / cellSize ) * cellSize;
+            p.cy = ~~( p.y / cellSize ) * cellSize;
+            var c = new Point( p.cx, p.cy );
+            p.c = c;
+            points.push( p );
+
+            bins.push( c );
+
+            ctx.lineTo( Math.cos( i ) * radius, Math.sin( i ) * radius );
+
+            i +=  Math.PI / ( 9 + ( 9 * PRNG.random() ) );
+        }
+//        ctx.stroke();
+
+//        g.ctx.globalAlpha = 1;
+        points.forEach( function( p ) {
+
+
+//            g.disc(p, 1);
+
+            g.line( p, p.c );
+//            var line = [p];
+
+//            for( var i = 0; i < 100; i++ ){
+//
+//                line.push( )
+//
+//            }
+
+        });
+
+        ctx.restore();
+//        g.ctx.globalAlpha = 1;
+//        g.text( "GROW", 'Tahoma', 192, 125, 595 )
+//        g.text( "GROW", 'COURIER', 192, 125, 595 )
+
+    </script>
+
+</body>
+</html>
