@@ -122,7 +122,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
             springs.forEach(function (s) {
 
-                ctx.globalAlpha = .01;
+                ctx.globalAlpha = 4 / 0xFF;
                 g.line( s.p0, s.p1 );
 
             });

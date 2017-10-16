@@ -30,7 +30,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.lineWidth = 2 * unit;
     ctx.lineJoin = "round";
     var convex = hull(points, 40 );
-    g.polyline(convex, true);
+    // g.polyline(convex, true);
 
     points = convex.map( function( p, i, a ){
 
@@ -61,6 +61,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         var normal = cross(c.clone().sub(a), c.clone().sub(b)).normalize();
         ctx.globalAlpha = .25;
         drawTri( ctx, a,b,c );
+        ctx.stroke()
 
         ctx.globalAlpha = map(light.dot(normal), -1, 1, 0.75, .0);
         ctx.fill();
@@ -73,7 +74,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         ctx.lineTo(b.x, b.y);
         ctx.lineTo(c.x, c.y);
         ctx.lineTo(a.x, a.y);
-        ctx.stroke()
 
     }
 
