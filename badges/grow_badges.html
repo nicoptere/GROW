@@ -32,6 +32,9 @@
     <script src="../utils/PRNG.js"></script>
     <script src="../utils/distributions.js"></script>
     <script src="../utils/D3.js"></script>
+    <script src="../utils/Poisson.js"></script>
+    <script src="../utils/CubicPath.js"></script>
+    <script src="../utils/CatmullRom.js"></script>
 
     <script src="circle.js"></script>
     <script>
@@ -129,6 +132,10 @@
     <script src="generators/51.js"></script>
     <script src="generators/52.js"></script>
     <script src="generators/53.js"></script>
+    <script src="generators/54.js"></script>
+    <script src="generators/55.js"></script>
+    <script src="generators/56.js"></script>
+    <script src="generators/57.js"></script>
 
     <script src="logo.js"></script>
     <script src="save.js"></script>
@@ -195,11 +202,25 @@
         function saveCurrent() {
             var ctx = render(s, seed);
             console.log( genId, seed, s );
-            save(ctx, seed );
+            save(ctx, genId );
         }
 
         gui.add( window, 'saveCurrent' );
 
+
+        function negate() {
+
+            var imd = g.ctx.getImageData(0,0,s,s);
+            var i = imd.data.length;
+            while( i-=4 ){
+                imd.data[i] = 0xFF - imd.data[i];
+                imd.data[i+1] = 0xFF - imd.data[i+1];
+                imd.data[i+2] = 0xFF - imd.data[i+2];
+            }
+            g.ctx.putImageData(imd,0,0);
+        }
+
+        gui.add( window, 'negate' );
 
         var g = new Graphics();
         g.ctx = g.getContext( s, s );
