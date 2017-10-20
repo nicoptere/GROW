@@ -40,7 +40,7 @@ Point.prototype = {
     set : function(x,y,z){
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.z = z||0;
         return this;
     },
     length : function(){

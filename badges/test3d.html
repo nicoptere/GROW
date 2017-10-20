@@ -45,7 +45,7 @@
         for( var i = 0; i < 100; i++ ){
 
                 var p = new Point( PRNG.random()-.5, PRNG.random()-.5, PRNG.random()-.5 );
-                p.multiplyScalar( 10 );
+                p.multiplyScalar( 100 );
                 vertices.push( p );
 
             for( var j = 0; j < 100; j++ ){
@@ -63,7 +63,7 @@
         var m = new mesh(vertices, indices);
         function update(){
             requestAnimationFrame(update);
-            D3.focalDistance = 100;// + Math.sin( Date.now() * 0.001 ) * 500;
+            D3.focalDistance = 1.10;// + Math.sin( Date.now() * 0.001 ) * 500;
 //            m.position.y = Math.sin( Date.now() * 0.001 ) * 50;
             D3.render( [ m ], ctx )
         }
