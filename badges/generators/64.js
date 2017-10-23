@@ -6,33 +6,45 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.save();
 
-    var c = new Point(s/2, s/2);
-    c.radius = s / 4;
+    ctx.lineCap = 'round';
+    var c = new Point( s * .5, s * .5  );
+    c.radius = s / 2.5;
+    g.disc(c, c.radius );
 
-    var t = Date.now() * 0.001;
+
     var p = new Point();
     var n = new Point();
     var RAD = Math.PI / 180;
 
-    ctx.lineWidth = 5 * unit;
-    for( var i = 0; i <  Math.PI * 2; i += RAD ){
+    ctx.lineWidth = 20 * unit;
+    var sa = -PI / 4;
+    var it = 0;
+    var step = RAD * .1;
+    var tot = PI2 / step;
+    var sca = 0.005 / unit;
+    ctx.globalAlpha = 0.05;
 
-        p.x = c.x + Math.cos( i ) * c.radius;
-        p.y = c.y + Math.sin( i ) * c.radius;
+    for( var i = sa; i < sa + Math.PI * 2; i += step ){
 
-        var radius = c.radius * ( ( Math.sin( t + i * 3  )* Math.cos( t ) )  * .5 + .5 ) * 2 ;
-        n.x = c.x + Math.cos( i + RAD * 30 ) * radius;
-        n.y = c.y + Math.sin( i + RAD * 30 ) * radius;
+        var angle = i;
+        p.x = c.x + Math.cos( angle ) * c.radius;
+        p.y = c.y + Math.sin( angle ) * c.radius;
 
-        var grad = ctx.createRadialGradient( p.x,p.y, 0,p.x,p.y, Math.abs( radius ) );
-        grad.addColorStop( 0, "rgba(0,0,0, 1 )" );
-        grad.addColorStop( 1, "rgba(0,0,0, 0 )" );
+        var t =  noise.perlin3( p.x * sca, p.y * sca, it++/tot ) * 7.5;
+        var radius = c.radius * t;
+        n.x = c.x + Math.cos( angle + RAD * t * 30 ) * radius;
+        n.y = c.y + Math.sin( angle + RAD * t * 30 ) * radius;
+
+        n = geomUtils.closestPointOnCircle(n,c);
+
+        var grad = ctx.createRadialGradient( p.x,p.y, 0, p.x,p.y, Math.abs( radius * .5 ) );
+        grad.addColorStop( 0, "rgba(255,255,255, 1 )" );
+        grad.addColorStop( 1, "rgba(255,255,255, 0 )" );
         ctx.strokeStyle = grad;
 
         g.line(p,n);
 
     }
-
     ctx.restore();
 
 };

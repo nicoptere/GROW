@@ -4,7 +4,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     noise.seed(PRNG.random());
 
     ctx.save();
-
     var lines = [];
     for( var i = 0; i < 1000; i++ ){
         lines.push( [

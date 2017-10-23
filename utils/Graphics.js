@@ -154,9 +154,9 @@ var Graphics = function( ctx )
         var oa = Math.max( angle, length );
 
         var center = new Point(x,y);
-        var i0 = Point.fromAngleDistance( ia, radiusIn ).add( center );
+        var i0 = pointAtAngleRadius( ia, radiusIn ).add( center );
         //var i1 = Point.fromAngleDistance( oa, radiusIn ).add( center );
-        var o1 = Point.fromAngleDistance( oa, radiusOut ).add( center );
+        var o1 = pointAtAngleRadius( oa, radiusOut ).add( center );
         //var o0 = Point.fromAngleDistance( ia, radiusOut ).add( center );
 
         exports.ctx.beginPath();

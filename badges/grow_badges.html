@@ -64,6 +64,7 @@
         var HPI = PI / 2;
         var PI2 = PI * 2;
         var RAD = PI / 180;
+        var DEG = 180 / PI;
         function lerp ( t, a, b ){ return a * (1-t) + b * t; }
         function norm( t, a, b ){return ( t - a ) / ( b - a );}
         function map( t, a0, b0, a1, b1 ){ return lerp( norm( t, a0, b0 ), a1, b1 );}
@@ -144,6 +145,12 @@
     <script src="generators/62.js"></script>
     <script src="generators/63.js"></script>
     <script src="generators/64.js"></script>
+    <script src="generators/65.js"></script>
+    <script src="generators/66.js"></script>
+    <script src="generators/67.js"></script>
+    <script src="generators/68.js"></script>
+    <script src="generators/69.js"></script>
+
 
     <script src="logo.js"></script>
     <script src="save.js"></script>
@@ -153,15 +160,45 @@
         var maxGen = --genId;
 //        maxGen = 3;
 //        genId = 49;
+        var seedIterator = 0;
+        var seeds = [];
+        var names = [];
+        var negative = false;
         var s = 1000;
         var seed = Date.now();
+
 
         var img = new Image();
         img.onload = function(){
             reset();
         };
-//        img.src= "white_title.png";
-        img.src= "white_title_1.png";
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e){
+
+            var str = e.target.responseText;
+            var entries = str.split( '\n' );
+            console.log( entries[0][9] );
+            entries.shift();
+            entries.forEach(function(e){
+
+                var bits = e.split( '","' );
+                var c = ~~( bits[9] );
+                while( c-- ){
+                    seeds.push( ~~(bits[1]) );
+                    names.push( bits[15] + " " + bits[16] );
+                }
+
+            });
+//            console.log( seeds );
+
+//            img.src= "white_title.png";
+//            img.src= "white_title_1.png";
+            seed = seeds[0];
+            img.src= "grow_crop.svg";
+        };
+        xhr.open( 'GET', 'csv/attendees.csv' );
+        xhr.send();
+
 
         function reset(){
 
@@ -182,27 +219,32 @@
         });
 
         function saveAll( ){
-
             if( typeof save !== 'undefined' ){
                 genId = 0;
+                seedIterator = 0;
                 saveNext();
             }
         }
-        function getNextSeed(){
-            return ++seed;
+        function nextSeed(){
+            seedIterator++;
+        }
+        function getSeed(){
+            return seeds[ seedIterator % seeds.length ];
+        }
+        function getName(){
+            return names[ ~~( PRNG.random() * names.length ) ];
+            return names[ seedIterator % names.length ];
         }
         function saveNext(){
+
             if( genId > maxGen )return;
 
-//            if( document.getElementById('canvas') !== null ){
-//                document.body.removeChild( document.getElementById('canvas') );
-//            }
-
-            seed = getNextSeed();
+            nextSeed();
+            seed = getSeed();
             var ctx = render(s, seed);
             genId++;
             console.log( genId-1, seed, s );
-            save(ctx, genId-1, saveNext );
+            save(ctx, (negative?"n_":"")+( genId-1 ), saveNext );
 
         }
 
@@ -218,21 +260,23 @@
 
 
         function negate() {
-
-            var imd = g.ctx.getImageData(0,0,s,s);
-            var i = imd.data.length;
-            while( i-=4 ){
-                imd.data[i] = 0xFF - imd.data[i];
-                imd.data[i+1] = 0xFF - imd.data[i+1];
-                imd.data[i+2] = 0xFF - imd.data[i+2];
+            if( negative ){
+                var imd = g.ctx.getImageData(0,0,s,s);
+                var i = imd.data.length;
+                while( i-=4 ){
+                    imd.data[i] = 0xFF - imd.data[i];
+                    imd.data[i+1] = 0xFF - imd.data[i+1];
+                    imd.data[i+2] = 0xFF - imd.data[i+2];
+                }
+                g.ctx.putImageData(imd,0,0);
             }
-            g.ctx.putImageData(imd,0,0);
         }
 
-        gui.add( window, 'negate' );
+        gui.add( window, 'negative' ).onChange(negate);
 
         var g = new Graphics();
         g.ctx = g.getContext( s, s );
+        var text_ctx = g.getContext( s, s );
         document.body.appendChild(g.ctx.canvas);
 
         function render( s, seed ){
@@ -240,6 +284,8 @@
             var unit = 0.001 * s;
             g.ctx.canvas.width  = s;
             g.ctx.canvas.height = s;
+            text_ctx.canvas.width  = s;
+            text_ctx.canvas.height = s;
 
             var ctx = g.ctx;
             ctx.fillStyle = "#FFF";
@@ -250,7 +296,16 @@
 
             generators[ genId ]( g, ctx, s, seed, unit );
 
-            if( typeof logo !== 'undefined' ) logo( ctx, s );
+            negate();
+
+            if( typeof logo !== 'undefined' ){
+
+                logo( text_ctx, unit, s, getName().toUpperCase() );
+                ctx.drawImage(text_ctx.canvas, 0,0,s,s );
+            }
+
+
+
             return ctx;
         }
 

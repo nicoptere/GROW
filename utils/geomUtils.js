@@ -901,6 +901,34 @@ var geomUtils = function(exports) {
 
     };
 
+    exports.polygonContains = function( p, polygon ){
+        var x = p.x;
+        var y = p.y;
+        var c = false,
+            l = polygon.length,
+            j = l - 1;
+
+        for( var i = -1; ++i < l; j = i)
+        {
+            (   ( polygon[ i ].y <= y && y < polygon[ j ].y )
+                ||  ( polygon[ j ].y <= y && y < polygon[ i ].y ) )
+            &&  ( x < ( polygon[ j ].x - polygon[ i ].x ) * ( y - polygon[ i ].y ) / ( polygon[ j ].y - polygon[ i ].y ) + polygon[ i ].x )
+            &&  ( c = !c);
+        }
+        return c;
+    };
+
+    exports.rotateAroundPoint = function( p, lattice, angle) {
+
+        var a = exports.angle(lattice, p) + angle;
+        var d = exports.distance(lattice, p);
+
+        var pp = new Point();
+        pp.x = lattice.x + Math.cos(a) * d;
+        pp.y = lattice.y + Math.sin(a) * d;
+        return pp;
+
+    };
 
     return exports;
 }({});

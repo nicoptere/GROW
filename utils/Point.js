@@ -81,7 +81,29 @@ Point.prototype = {
             lerp( t, this.y , other.y),
             lerp( t, this.z , other.z)
         );
+    },
+
+    sphericalCoords : function( theta, phi, radius ) {
+        radius = radius || 1;
+        this.x = radius * Math.sin(phi) * Math.sin(theta);
+        this.y = radius * Math.cos(phi);
+        this.z = radius * Math.sin(phi) * Math.cos(theta);
+        return this;
+    },
+
+    toLonLat : function(){
+
+        var v = this.clone();
+        v.normalize();
+        var lng = -( Math.atan2( -v.z, -v.x ) ) - Math.PI / 2;
+        if( lng < - Math.PI )lng += Math.PI * 2;
+        var p = new Point( v.x, 0, v.z );
+        p.normalize();
+        var lat = Math.acos( p.dot( v ) );
+        if( v.y < 0 ) lat *= -1;
+        return [ lng,lat ];
     }
+
 };
 function getAngle(a,b) {
     var dx = b.x - a.x;
