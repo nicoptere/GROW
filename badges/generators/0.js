@@ -39,4 +39,5 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     ctx.stroke();
     ctx.restore();
 
+    return PORTRAIT;
 }

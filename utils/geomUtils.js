@@ -244,14 +244,18 @@ var geomUtils = function(exports) {
         ip.x = (b1 * c2 - b2 * c1) / denom;
         ip.y = (a2 * c1 - a1 * c2) / denom;
 
-        if (A.x == B.x)
+        if (A.x == B.x){
             ip.x = A.x;
-        else if (E.x == F.x)
+        }
+        else if (E.x == F.x){
             ip.x = E.x;
-        if (A.y == B.y)
+        }
+        if (A.y == B.y){
             ip.y = A.y;
-        else if (E.y == F.y)
+        }
+        else if (E.y == F.y){
             ip.y = E.y;
+        }
 
         if (ABasSeg) {
             if (( A.x < B.x ) ? ip.x < A.x || ip.x > B.x : ip.x > A.x || ip.x < B.x)
@@ -342,9 +346,8 @@ var geomUtils = function(exports) {
     /**
      * offset a polyline by a given amount
      */
-    exports.offsetPolygon = function( polygon, offset ){
+    exports.offsetPolygon = function( points, offset ){
         var tmp = [];
-        var points = polygon.points;
         var count = points.length;
         for(var j = 0; j < count; j++){
 
@@ -360,33 +363,32 @@ var geomUtils = function(exports) {
             //create 2 lines, parallel to both edges at a given distance 'offset'
 
             //computes a normal vector to the direction of the: prev -> current edge of length offset
-            var l1 = distance(cur, pre);
-            var n1 = [
+            var l1 = exports.distance(cur, pre);
+            var n1 = new Point(
                 -( ( cur.y - pre.y ) / l1 ) * offset,
                 ( ( cur.x - pre.x ) / l1 ) * offset
-            ];
+            );
 
             //does the same for the : current -> next edge
-            var l2 = distance(cur, nex);
-            var n2 = [
+            var l2 = exports.distance(cur, nex);
+            var n2 = new Point(
                 -( ( nex.y - cur.y ) / l2 ) * offset,
                 ( ( nex.x - cur.x ) / l2 ) * offset
-            ];
+            );
 
             //and create 2 points at both ends of the edge to obtain a parallel line
-            var p1 = [ pre.x+n1.x, pre.y+n1.y];
-            var p2 = [ cur.x+n1.x, cur.y+n1.y];
-            var p3 = [ cur.x+n2.x, cur.y+n2.y];
-            var p4 = [ nex.x+n2.x, nex.y+n2.y];
+            var p1 = new Point( pre.x+n1.x, pre.y+n1.y );
+            var p2 = new Point( cur.x+n1.x, cur.y+n1.y );
+            var p3 = new Point( cur.x+n2.x, cur.y+n2.y );
+            var p4 = new Point( nex.x+n2.x, nex.y+n2.y );
 
             // console.log( p1, p2, p3, p4 );
-            var ip = lineIntersection( p1, p2, p3, p4 );
+            var ip = exports.lineIntersectLine( p1, p2, p3, p4 );
             if( ip != null ) {
                 tmp.push( ip );
             }
 
         }
-        polygon.points = tmp;
         return tmp;
     }
 

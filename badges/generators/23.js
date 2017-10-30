@@ -21,7 +21,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         var y = s/2 + ( PRNG.random() - .5 ) * s / 4;
 
         var a = PRNG.random() * 2 * Math.PI;
-        var l = s/ 4 * unit + PRNG.random() * 50*unit;
+        var l = s/ 3 + PRNG.random() * 50*unit;
 
         segments.push( [
             new Point( x - Math.cos( a ) * l, y - Math.sin( a ) * l ),
@@ -79,14 +79,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     var voronoi = new Voronoi();
     var bbox = {xl: -s, xr: s, yt: -s, yb: s};
-    // var sites = points.map( function( a ){ return { x:a.x, y:a.y }; } );
-
     var diagram = voronoi.compute(points, bbox);
-    // console.log( diagram.cells );
-    diagram.cells.forEach(function(cell){
-        // g.disc( cell.site, 2 );
-    });
-
 
     diagram.edges.forEach(function(e){
         ctx.globalAlpha = .25;
@@ -95,13 +88,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         ctx.lineTo(e.vb.x, e.vb.y);
         ctx.stroke();
 
-        // if( e.lSite !== null ){
-        //     drawTri( ctx, e.lSite, e.va, e.vb );
-        // }
-        // if( e.rSite !== null ){
-        //     drawTri( ctx, e.rSite, e.va, e.vb );
-        // }
-        // g.disc( cell.site, 2 );
     });
 
 
@@ -115,32 +101,10 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         ctx.lineTo( b.x, b.y );
         ctx.lineTo( c.x, c.y );
         ctx.lineTo( a.x, a.y );
-        // ctx.stroke();
 
-        // var cx0 = lerp( .25,a.x, b.x);
-        // var cy0 = lerp( .25,a.y, b.y);
-        // var cx00 = lerp( .75,a.x, b.x);
-        // var cy00 = lerp( .75,a.y, b.y);
-        //
-        // var cx1 = lerp( .25,b.x, c.x);
-        // var cy1 = lerp( .25,b.y, c.y);
-        // var cx10 = lerp( .75,b.x, c.x);
-        // var cy10 = lerp( .75,b.y, c.y);
-        //
-        // var cx2 = lerp( .25,c.x, a.x);
-        // var cy2 = lerp( .25,c.y, a.y);
-        // var cx20 = lerp( .75,c.x, a.x);
-        // var cy20 = lerp( .75,c.y, a.y);
-        //
-        // ctx.moveTo( cx00, cy00 );
-        // ctx.lineTo( cx1, cy1 );
-        //
-        // ctx.moveTo( cx10, cy10 );
-        // ctx.lineTo( cx2, cy2 );
-        //
-        // ctx.moveTo( cx20, cy20 );
-        // ctx.lineTo( cx0, cy0 );
 
     }
+
+    return LANDSCAPE;
 
 };

@@ -6,75 +6,99 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.save();
 
-    /*
 
-    var tmp = new Point();
     var points = [];
-    points = distribution.sphereUniform(100, s/4);
-    for ( var i = 0; i < 100; i++ ){
+    var count = 10;
+    var cell = s/count;
+    for( var i = 0; i< count; i++ ){
 
-        var p = new Point( PRNG.random() * s, PRNG.random() * s, PRNG.random() * s );
-        // p = pointAtAngleRadius( ( PRNG.random() * PI2 ), s/4 ).add( new Point( s/2, s/2 ) );
-        p = points[i];
+        for( var j = 0; j< count; j++ ){
 
-        p.children = [];
 
-        var speed = 0.01 + ( Math.sqrt( PRNG.random() *2 ) );
-        for( var j = 0; j < 10; j++ ){
+            var x = i * cell + PRNG.random() * cell;
+            var y = j * cell + PRNG.random() * cell;
 
-            var c = new Point( PRNG.random() - .5 , PRNG.random() - .5 , PRNG.random() - .5  ).normalize();//.copy( p );
 
-            var lola = c.toLonLat();
-            c.theta = lola[1];//PRNG.random() * PI2;
-            c.phi = lola[0];//PRNG.random() * PI2;
-            c.speed = speed;
-            c.r = 1 + PRNG.random() * 4;
-            c.add(p);
-
-            c.add( tmp.sphericalCoords( c.theta, c.phi, c.speed ) );
-
-            p.children.push( c );
+            var p = new Point( x,y );
+            points.push( p );
 
         }
 
-        // points.push( p );
-
     }
-    ctx.translate(s/2,s/2);
 
 
-    var sca = 0.001 / unit;
-    var tot = 100;
-    i = tot;
-    while( i-- ){
+    var voronoi = new Voronoi();
+    var bbox = {xl: -s, xr: s, yt: -s, yb: s};
+    var diagram = voronoi.compute( points, bbox);
 
-        ctx.globalAlpha = 1 - i / ( tot  );
-        ctx.lineWidth = ( 1 - i / tot ) * 3 * unit;
-        ctx.beginPath();
+    var center = new Point( s/2, s/2 )
+    diagram.cells.forEach(function(cell, i){
 
-        points.forEach( function( p ){
+        // if( i !== 20 )return;
+        if( cell.site == undefined )return;
 
-            // ctx.globalAlpha = Math.abs( PRNG.FBM( p.x * 0.1, p.y * 0.1, 2  ) * 2 );
+        var poly = [];
+        cell.halfedges.forEach(function( he ){
 
-            p.children.forEach( function(c){
-                ctx.moveTo( c.x, c.y );
-                c.y += unit * 2;
-                // c.x += Math.sin( c.x * 0.001 );
-
-                c.add( tmp.sphericalCoords( c.theta, c.phi, c.r ) );
-
-                c.theta += noise.perlin3( c.x * sca, c.y * sca, c.z * sca ) * .5;
-                c.phi   += noise.perlin3( c.x * sca, c.y * sca, c.z * sca ) * .5;
-
-                ctx.lineTo( c.x, c.y )
-
-            })
+            poly.push( [ he.edge.va.x, he.edge.va.y ] );
+            poly.push( [ he.edge.vb.x, he.edge.vb.y ] );
 
         });
-        ctx.stroke();
-    }
 
-    //*/
-    ctx.restore()
+        var convex = hull(poly, s ).map( function( v ){
+            var p = new Point( v[0], v[1], 0 );
+            p.r = s/2;
+            return p;
+        } );
+
+        var d = getDistance( center, cell.site );
+        if( d - s / 3 < 0 ){
+            var k = 100;
+            ctx.globalAlpha = ( 1 / k );
+            while( k-- ){
+                repel(convex, convex );
+                g.polygon(convex, true);
+            }
+        }
+
+    } );
+
+
+    function repel(a, b) {
+
+        var acc = 0;
+        var dirs = [];
+        var sca = 0.005 / unit;
+        a.forEach(function (circle) {
+            circle.x += PRNG.FBM(circle.x * sca, circle.y * sca, 5 ) * unit;
+            circle.y += PRNG.FBM(circle.y * sca, circle.x * sca, 5 ) * unit;
+        });
+        a.forEach(function (circle) {
+
+            b.forEach(function (other) {
+
+                if (circle === other) return;
+
+                var p = circle;
+                var o = other;
+
+                var d = geomUtils.distance(p, o);
+                var minDist = circle.r + other.r;
+
+                if (d < minDist) {
+
+                    var dir = p.direction(o).multiplyScalar( .01 * unit);
+                    dir.z = 0;
+                    p.sub(dir);
+                    o.add(dir);
+                }
+
+            });
+
+        });
+        return acc;
+    }
+    ctx.restore();
+    return PORTRAIT;
 
 };

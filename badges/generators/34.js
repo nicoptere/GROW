@@ -33,7 +33,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.lineJoin = "round";
 
 
-    var convex = hull(points, 80 );
+    var convex = hull(points, 80 * unit );
     g.polygon(convex, true);
 
     var delaunay = new Delaunator( convex );
@@ -42,7 +42,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         drawTri( ctx, convex, tris[i++], tris[i++], tris[i++]);
     }
 
-    convex = hull(points, 150 );
+    convex = hull(points, 150 * unit  );
     ctx.strokeStyle = "#000";
     g.polyline(convex, true);
 
@@ -58,5 +58,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return PORTRAIT;
 
 };

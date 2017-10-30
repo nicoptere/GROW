@@ -42,18 +42,16 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             n.add( G );
 
             tmp.copy( n ).multiplyScalar(sca).add( p );
-            var cn = curlNoise( tmp, 0.1 ).multiplyScalar(0.1);
-            var thi = getDistance(n, p) * .14 * unit;//* ( 1 + r * 5 ) * unit;
+
+            var cn = curlNoise( tmp, 0.1 / unit ).multiplyScalar(0.1);
+
+            var thi = getDistance(n, p) * .14;//* ( 1 + r * 5 ) * unit;
             ctx.save();
             ctx.rotate( getAngle(n, cn) );
             n.add( cn );
             G.add(cn);
 
-            // ctx.lineWidth = thi;
-
             ctx.beginPath();
-            // ctx.moveTo( p.lx, p.ly );
-            // ctx.lineTo( p.x + n.x , p.y + n.y );
             ctx.rect( p.x + n.x , p.y + n.y, thi, .16*thi );
 
             ctx.fill();
@@ -96,5 +94,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         return new Point( x , y , z ).normalize().multiplyScalar( divisor );
 
     }
+    return LANDSCAPE;
 
 };

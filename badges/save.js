@@ -1,15 +1,16 @@
 
 var dl = document.createElement( 'a' );
-function save( ctx, seed, cb ){
+function save( ctx, id, cb ){
 
-    canvas.toBlob(function(blob) {
+    ctx.canvas.toBlob(function(blob) {
         // dl.href = ctx.canvas.toDataURL('image/png');
 
         dl.href = URL.createObjectURL(blob);
-        dl.download = seed + ".png";
+        dl.download = id + ".png";
         dl.click();
 
-        if( cb )setTimeout( cb, 1 );
+        id++;
+        if( cb )setTimeout( cb, 1, id );
     });
 
 }

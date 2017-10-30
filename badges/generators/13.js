@@ -34,14 +34,15 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
         circle.update( s, true );
         circle.render(ctx, unit);
-        ctx.globalAlpha = .1 / t * unit;
+        ctx.globalAlpha = .1 / t;// * unit;
         ctx.fill();
 
-        ctx.globalAlpha = .75 * unit;
+        ctx.globalAlpha = .75;// * unit;
         ctx.stroke();
 
     }
     ctx.fillStyle = "#000";
     ctx.restore();
 
+    return LANDSCAPE;
 }

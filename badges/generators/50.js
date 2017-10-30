@@ -12,22 +12,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         var tmp = new Point();
         var sca = 0.005 / unit;
 
-        // ctx.fillStyle = "#111";
-        // ctx.globalAlpha = .01;
-        // for( var i = 0; i < points.length; i++ ){
-        //
-        //     var p = points[i];
-        //     var n = normals[i];
-        // }
-        //
-        // g.circle( 0, 0, s/8 );
-        // ctx.fillStyle = "#FFF";
-        // ctx.globalAlpha = 1;
-        // for( var i = 0; i < points.length; i++ ){
-        //     var p = points[i];
-        //     g.disc( p, 2 * unit );
-        // }
-
         for( var i = 0; i < points.length; i++ ){
 
             var p = points[i];
@@ -36,7 +20,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             for( var k = 0; k < count ; k++ ){
 
                 ctx.beginPath();
-                ctx.globalAlpha = .25;
+                ctx.globalAlpha = .5;
 
                 ctx.moveTo( p.x, p.y );
 
@@ -44,15 +28,15 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
                 tmp.copy( p );
 
-                var cn = curlNoise( tmp.multiplyScalar(sca), 0.05 ).multiplyScalar( sca );//.01 + i/points.length);
+                var cn = curlNoise( tmp.multiplyScalar(sca), 0.05 / unit ).multiplyScalar( sca );//.01 + i/points.length);
                 n.add( cn );
                 n.normalize();
 
                 ctx.lineTo( p.x , p.y );
 
-                var t = ( Math.sin( PI * k / count * (s/10) ) );
+                var t = ( Math.sin( PI * k / count ) );
                 // if( t < 0 )continue;
-                ctx.lineWidth = unit * t * 8; //TODO caler l'échelle
+                ctx.lineWidth = unit * t * 16; //TODO caler l'échelle
                 ctx.stroke();
 
             }
@@ -89,4 +73,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.restore();
 
+    return LANDSCAPE;
 };

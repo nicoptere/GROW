@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>badges</title>
+    <style>
+        /*html,*/
+        /*body {*/
+            /*width: 100%;*/
+            /*height: 100%;*/
+            /*!*overflow: hidden;*!*/
+            /*top: 0;*/
+            /*left: 0;*/
+            /*margin: 0;*/
+            /*padding: 0;*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+
+
+
+    <script src='vendor/pdfmake.min.js'></script>
+    <script src='vendor/vfs_fonts.js'></script>
+
+
+    <script src="vendor/dat.gui.min.js"></script>
+    <script src="../utils/Point.js"></script>
+    <script src="../utils/geomUtils.js"></script>
+    <script src="../utils/Graphics.js"></script>
+    <script src="../utils/earcut.js"></script>
+    <script src="../utils/Delaunator.js"></script>
+    <script src="../utils/hull.js"></script>
+    <script src="../utils/voronoi.js"></script>
+    <script src="../utils/noise.js"></script>
+    <script src="../utils/PRNG.js"></script>
+    <script src="../utils/distributions.js"></script>
+    <script src="../utils/D3.js"></script>
+    <script src="../utils/Poisson.js"></script>
+    <script src="../utils/CubicPath.js"></script>
+    <script src="../utils/CatmullRom.js"></script>
+
+    <script src="circle.js"></script>
+    <script>
+
+        function distance( a,b ){
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            return Math.sqrt( dx*dx+dy*dy );
+        }
+
+        function angle( a,b ){
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            return Math.atan2( dy,dx );
+        }
+
+
+        function areaABC( a,b,c ){
+            var side1 = getDistance(a,b)
+            var side2 = getDistance(b,c)
+            var side3 = getDistance(c,a)
+            var perimeter = (side1 + side2 + side3)/2;
+            return Math.sqrt(perimeter*((perimeter-side1)*(perimeter-side2)*(perimeter-side3)));
+        }
+
+        var PI = Math.PI;
+        var HPI = PI / 2;
+        var PI2 = PI * 2;
+        var RAD = PI / 180;
+        var DEG = 180 / PI;
+        function lerp ( t, a, b ){ return a * (1-t) + b * t; }
+        function norm( t, a, b ){return ( t - a ) / ( b - a );}
+        function map( t, a0, b0, a1, b1 ){ return lerp( norm( t, a0, b0 ), a1, b1 );}
+
+        var PORTRAIT = 0;
+        var LANDSCAPE = 1;
+        var genId = 0;
+        var generators = [];
+
+    </script>
+
+    <script src="generators/0.js"></script>
+    <script src="generators/1.js"></script>
+    <script src="generators/2.js"></script>
+    <script src="generators/3.js"></script>
+    <script src="generators/4.js"></script>
+    <script src="generators/5.js"></script>
+    <script src="generators/6.js"></script>
+    <script src="generators/7.js"></script>
+    <script src="generators/8.js"></script>
+    <script src="generators/9.js"></script>
+
+    <script src="generators/10.js"></script>
+    <script src="generators/11.js"></script>
+    <script src="generators/12.js"></script>
+    <script src="generators/13.js"></script>
+    <script src="generators/14.js"></script>
+    <script src="generators/15.js"></script>
+    <script src="generators/16.js"></script>
+    <script src="generators/17.js"></script>
+    <script src="generators/18.js"></script>
+    <script src="generators/19.js"></script>
+
+    <script src="generators/20.js"></script>
+    <script src="generators/21.js"></script>
+    <script src="generators/22.js"></script>
+    <script src="generators/23.js"></script>
+    <script src="generators/24.js"></script>
+    <script src="generators/25.js"></script>
+    <script src="generators/26.js"></script>
+    <script src="generators/27.js"></script>
+    <script src="generators/28.js"></script>
+    <script src="generators/29.js"></script>
+
+    <script src="generators/30.js"></script>
+    <script src="generators/31.js"></script>
+    <script src="generators/32.js"></script>
+    <script src="generators/33.js"></script>
+    <script src="generators/34.js"></script>
+    <script src="generators/35.js"></script>
+    <script src="generators/36.js"></script>
+    <script src="generators/37.js"></script>
+    <script src="generators/38.js"></script>
+    <script src="generators/39.js"></script>
+
+    <script src="generators/40.js"></script>
+    <script src="generators/41.js"></script>
+    <script src="generators/42.js"></script>
+    <script src="generators/43.js"></script>
+    <script src="generators/44.js"></script>
+    <script src="generators/45.js"></script>
+    <script src="generators/46.js"></script>
+    <script src="generators/47.js"></script>
+    <script src="generators/48.js"></script>
+    <script src="generators/49.js"></script>
+
+    <script src="generators/50.js"></script>
+    <script src="generators/51.js"></script>
+    <script src="generators/52.js"></script>
+    <script src="generators/53.js"></script>
+    <script src="generators/54.js"></script>
+    <script src="generators/55.js"></script>
+    <script src="generators/56.js"></script>
+    <script src="generators/57.js"></script>
+    <script src="generators/58.js"></script>
+    <script src="generators/59.js"></script>
+
+    <script src="generators/60.js"></script>
+    <script src="generators/61.js"></script>
+    <script src="generators/62.js"></script>
+    <script src="generators/63.js"></script>
+    <script src="generators/64.js"></script>
+    <script src="generators/65.js"></script>
+    <script src="generators/66.js"></script>
+    <script src="generators/67.js"></script>
+    <script src="generators/68.js"></script>
+    <script src="generators/69.js"></script>
+
+    <script src="generators/70.js"></script>
+    <script src="generators/71.js"></script>
+    <script src="generators/72.js"></script>
+    <script src="generators/73.js"></script>
+    <script src="generators/74.js"></script>
+
+
+    <script src="data.js"></script>
+    <script src="save.js"></script>
+
+    <script>
+
+        /*
+        LOGO
+        2017
+        nom / prénmom
+        type :
+        0 workshop
+        1 conférences
+        2 speaker
+        3 new kids
+        4 bac à sable
+        5 staff
+        6 extra
+        Gen     ID
+        TYPE    0 Positif / 1 Negatif
+        User    ID
+        Secret  ID
+        Badge   ID
+        */
+
+        function savePDF( user, dataUrl, orientation, recursive ){
+
+            var s = orientation == LANDSCAPE ? 610 : 420
+            var margin = orientation == LANDSCAPE ? 7.5 : 15;
+            var offset = orientation == LANDSCAPE ? - 15: 110 - margin * 2;
+
+            var dd = {
+                pageSize: 'A5',
+                pageOrientation: 'portrait',
+                // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+                pageMargins: [ 0, 0, 0, 0 ],
+                content: [
+                    {
+                        image: dataUrl,
+                        width: s + margin * 2,
+                        height: s + margin * 2,
+                        alignment: 'center',
+                        margin: [0, offset, 0, 0],
+                    }
+                ]
+            };
+
+            if( user.NEG == 1 && orientation === PORTRAIT ){
+                dd.background = {
+                        image: blackDataUrl,
+                        width: 440+margin*2,
+                        height: 610+margin*2,
+                        alignment: 'center',
+                        margin: [0, -margin * 1.5, 0, 0],
+                    };
+            }
+
+            pdfMake.createPdf( dd ).download( user.id + '_a.pdf', function () {
+                console.log( user.id, "done" );
+
+                if( Boolean( recursive ) === true ){
+                    var id = user.id;
+                    id++;
+                        setTimeout( saveNext, 10, id );
+                }
+            });
+
+        }
+
+        ///////////////////////////////////////////////////////////////////
+
+        var maxGen = --genId;
+        var dataUrl;
+        var blackDataUrl;
+        var g = new Graphics();
+        g.ctx = g.getContext( 1, 1 );
+        document.body.appendChild(g.ctx.canvas);
+
+        var tg = new Graphics();
+        tg.ctx = g.getContext( 1, 1 );
+
+        var debug = false;
+        window.onload = function(){
+
+            tg.ctx.canvas.width = 10;
+            tg.ctx.canvas.height = 10;
+            tg.ctx.fillRect(0,0,100,100);
+            blackDataUrl = tg.ctx.canvas.toDataURL('image/png');
+
+            data.load( onLoad );
+
+        };
+
+        function onLoad( e ) {
+
+            saveNext( 0 );
+
+        }
+
+        function saveNext( id ){
+
+            if( id < data.users.length ) {
+
+                var user = data.getUser( id );
+
+                var orientation = render( user );
+
+                dataUrl = g.ctx.canvas.toDataURL('image/png');
+
+                savePDF( user, dataUrl, orientation, false );
+
+//                save( g.ctx, id );//, saveNext );
+
+            }else{
+                console.log(  'over' );
+            }
+        }
+
+        function render( user ){
+
+            var s = 4252;
+            var unit = 0.001 * s;
+            g.ctx.canvas.width  = s;
+            g.ctx.canvas.height = s;
+
+            var ctx = g.ctx;
+            ctx.fillStyle = "#FFF";
+            ctx.fillRect( 0,0,s,s );
+            ctx.fillStyle = "#000";
+            ctx.lineWidth = unit;
+
+            var orientation = generators[ user.GEN ]( g, ctx, s, user.UID, unit );
+
+            if( debug ){
+
+                var s = 1000;
+                var unit = 0.001 * s;
+                tg.ctx.canvas.width  = s;
+                tg.ctx.canvas.height = s;
+
+                tg.ctx.fillStyle = "rgba( 0,0,0,0 )";
+                tg.ctx.fillRect( 0,0,s,s );
+                tg.ctx.fillStyle = "#F00";
+                tg.ctx.lineWidth = unit;
+
+                generators[ user.GEN ]( tg, tg.ctx, s, user.UID, unit );
+
+                red( s, tg.ctx );
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.drawImage(
+                    tg.ctx.canvas,
+                    0, 0, 4252,4252
+                );
+
+            }
+
+            if( user.NEG === 1 )negate(s);
+
+            return orientation;
+        }
+
+        function negate(s) {
+            var imd = g.ctx.getImageData(0,0,s,s);
+            var i = imd.data.length;
+            while( i-=4 ){
+                imd.data[i] = 0xFF - imd.data[i];
+                imd.data[i+1] = 0xFF - imd.data[i+1];
+                imd.data[i+2] = 0xFF - imd.data[i+2];
+            }
+            g.ctx.putImageData(imd,0,0);
+        }
+
+        function red(s, ctx) {
+            var imd = ctx.getImageData(0,0,s,s);
+            var i = imd.data.length;
+            while( i-=4 ){
+                var a = imd.data[i];
+                imd.data[i]     = 0xFF;
+                imd.data[i+1]   = 0;
+                imd.data[i+2]   = 0;
+            }
+            ctx.putImageData(imd,0,0);
+        }
+
+
+
+    </script>
+
+</body>
+</html>

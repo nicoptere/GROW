@@ -83,31 +83,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
 
     ctx.globalAlpha = 1;
-    // convex = hull(points, 40 );
-    // g.polyline(convex, true);
-
-    // var ecp = [];
-    // convex.forEach(function(p){ ecp.push( p[0], p[1 ] ); } );
-    // var tris = earcut( ecp );
-    //
-    //
-    // for( i = 0; i < tris.length; ){
-    //     drawTri( ctx, convex, tris[i++], tris[i++], tris[i++]);
-    //     ctx.globalAlpha = PRNG.random();
-    //     ctx.fill();
-    // }
-
-
-    /*
-    convex = hull(points, 150 );
-    ctx.strokeStyle = "#000";
-    g.polyline(convex, true);
-
-    convex = hull(points, 150 );
-    ctx.strokeStyle = "#000";
-    g.polyline(convex, true);
-    //*/
-
     function drawTri( ctx, ps, a, b, c ){
 
         ctx.beginPath();
@@ -120,5 +95,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

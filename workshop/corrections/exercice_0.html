@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>exercice</title>
+</head>
+<body>
+
+    <script src="base.js"></script>
+    <script>
+
+        var count = 40;
+        var size = 1000 / count;
+        for ( var i = 0; i < count; i++ ){
+
+            for ( var j = 0; j < count; j++ ){
+
+                var p = new Point( i * size, j * size );
+                var n = new Point( ( i+1 ) * size, (j+1) * size );
+
+                if( Math.random() > .75 ){
+                    ctx.beginPath();
+                    ctx.moveTo( p.x, p.y );
+                    ctx.lineTo( n.x, p.y );
+                    ctx.lineTo( n.x, n.y );
+                    ctx.fill();
+                }
+
+                if( Math.random() > .5 ){
+                    ctx.beginPath();
+                    ctx.moveTo( p.x, p.y );
+                    ctx.lineTo( p.x, n.y );
+                    ctx.stroke();
+                }
+
+            }
+
+        }
+    </script>
+
+</body>
+</html>

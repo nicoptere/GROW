@@ -20,7 +20,7 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
             if( PRNG.random() > .75 )continue;
 
             var skip = 1 + ~~( PRNG.random() * s/500 );
-            var thi = ( PRNG.random() * s/100 ) * unit;
+            var thi = ( PRNG.random() * s/200 ) * unit;
 
             var tot = 150;
 
@@ -66,4 +66,5 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     }
     ctx.restore();
 
+    return LANDSCAPE;
 };

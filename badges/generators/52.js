@@ -41,7 +41,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             var m1 = p1.pointAt( .5, p2 );
             var m2 = p2.pointAt( .5, p0 );
 
-            m0.add( curlNoise( m0, 0.1 ) );
+            m0.add( curlNoise( m0, 0.1 / unit ) );
             // m1.add( curlNoise( m1, 0.01 ) );
             // m2.add( curlNoise( m2, 0.01 ) );
 
@@ -85,5 +85,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

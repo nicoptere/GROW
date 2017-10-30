@@ -5,7 +5,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.save();
     ctx.translate( s/2, s/2 );
-    ctx.scale( Math.sqrt( 2 ) * .5,  0.25 );
+    ctx.scale( Math.sqrt( 2 ) * .5,  0.35 );
     ctx.rotate( Math.PI / 4 * 2 );
     ctx.translate(-s/2, -s/2 );
 
@@ -38,5 +38,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.stroke();
     }
     ctx.restore();
+    return LANDSCAPE;
 
 };

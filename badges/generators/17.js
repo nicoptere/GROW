@@ -2,11 +2,10 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     PRNG.setSeed(seed || 0);
 
-    var radiusIn = s/4;
+    var radiusIn = s/5;
     var normal = s / 20 + ( PRNG.random() * s/100 );
-    var radiusOut = normal * ( 2 + PRNG.random() );
+    var radiusOut = normal * ( 3 + PRNG.random() );
 
-    ctx.globalAlpha = .1 * unit;
     var circle = new Circle( 7, normal, radiusIn, radiusOut );
     ctx.save();
     ctx.translate(s/2, s/2);
@@ -16,8 +15,10 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         circle.render(ctx, unit);
 
         ctx.lineWidth = PRNG.random() * 5 * unit;
-        ctx.globalAlpha = .1 * unit;
+        ctx.globalAlpha = .1;
         ctx.stroke();
     }
     ctx.restore();
+
+    return PORTRAIT;
 }

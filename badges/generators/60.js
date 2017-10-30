@@ -58,5 +58,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     });
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

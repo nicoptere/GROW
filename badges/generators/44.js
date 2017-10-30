@@ -104,7 +104,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         } );
 
         if( iteration-- > 0 ){
-            console.log( iteration );
+            //console.log( iteration );
             update();
         }
 
@@ -133,27 +133,21 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         }
     }
 
-    // for ( var i = 0; i < 250; i++ ) {
-    //     var p0 = points[~~(PRNG.random() * points.length)];
-    //     var p1 = points[~~(PRNG.random() * points.length)];
-    //     var sp = new Spring(p0, p1, s / 4 + PRNG.random() * s / 3);
-    //     springs.push(sp);
-    // }
-
     // make it converge early
-    i = 50;
-    console.time('t');
+    i = 2;
+    //console.time('t');
     while( i-- ){
         springs.forEach(function (s) {
             s.applyConstraints();
         });
     }
-    console.timeEnd('t');
+    //console.timeEnd('t');
 
     ctx.save();
     ctx.translate( s/2, s/2 );
     update();
     ctx.restore();
+    return PORTRAIT;
 
 
 };

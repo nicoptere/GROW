@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>l-system</title>
+
+    <style>
+
+        html, body{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+            top:0;
+            left:0;
+            margin:0;
+            padding:0;
+        }
+        canvas{
+            position: absolute;
+            z-index: 0;
+        }
+        form{
+            position: absolute;
+            z-index: 10;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+    <form id="params">
+        <h2>if you don't see anything<br>
+            drawn, reload this page </h2>
+        <label for="length">length</label><br>
+        <input type="range" id="length" min=".1" max="100" value="50" step=".1"><br>
+        <label for="angle">angle</label><br>
+        <input type="number" id="angle"  min="0" max="360" value="60" step="5"><br>
+        <label for="axiom">axiom</label><br>
+        <textarea id="axiom">F</textarea><br>
+        <label for="rule">rule</label><br>
+        <textarea id="rule">f+f-f-f-f+f</textarea><br>
+        <label for="generations">generations</label><br>
+        <input type="range" id="generations"  min="0" max="10" value="2"><br>
+        <label for="production">production</label><br>
+        <textarea id="production" style="height:300px" disabled></textarea>
+    </form>
+    <script src="Lsystem.js"></script>
+    <script src="main.js"></script>
+
+</body>
+</html>

@@ -96,6 +96,7 @@ generators[genId++] = function (g, ctx, s, seed, unit) {
     ctx.save();
     ctx.clip();
 
+    /*
     var voronoi = new Voronoi();
     var bbox = {xl: -s, xr: s, yt: -s, yb: s};
     ctx.strokeStyle = "#FFF";
@@ -123,17 +124,6 @@ generators[genId++] = function (g, ctx, s, seed, unit) {
 
     ctx.restore();
 
-    bubbles.forEach(function (p) {
-        p.radius = p.r;
-        var r = .5;
-        if (geomUtils.polygonContains(p, bounds)) {
-            ctx.fillStyle = "#FFF";
-        } else {
-            ctx.fillStyle = "#000";
-            r = .5
-        }
-        g.disc(p, p.r * r);
-    });
 
     function drawTri(ctx, ps, a, b, c) {
 
@@ -145,7 +135,18 @@ generators[genId++] = function (g, ctx, s, seed, unit) {
         ctx.lineTo(ps[a][0], ps[a][1]);
         ctx.stroke();
     }
-
+    //*/
+    bubbles.forEach(function (p) {
+        p.radius = p.r;
+        var r = .5;
+        if (geomUtils.polygonContains(p, bounds)) {
+            ctx.fillStyle = "#FFF";
+        } else {
+            ctx.fillStyle = "#000";
+            r = .5
+        }
+        g.disc(p, p.r * r);
+    });
     ctx.restore();
 
     function renderCell(e) {
@@ -185,5 +186,6 @@ generators[genId++] = function (g, ctx, s, seed, unit) {
         });
         return acc;
     }
+    return PORTRAIT;
 
 };

@@ -10,10 +10,12 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
         if( count === 0 ){
 
+            ctx.beginPath();
             ctx.moveTo( p0.x, p0.y );
             ctx.lineTo( p1.x, p1.y );
             ctx.lineTo( p2.x, p2.y );
             ctx.lineTo( p0.x, p0.y );
+            ctx.stroke();
 
             return;
         }
@@ -22,9 +24,9 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         var m1 = p1.pointAt( .5, p2 );
         var m2 = p2.pointAt( .5, p0 );
 
-        m0.add( curlNoise( m0, PRNG.random() * 0.1 ) );
-        m1.add( curlNoise( m1, PRNG.random() * 0.1 ) );
-        m2.add( curlNoise( m2, PRNG.random() * 0.1 ) );
+        m0.add( curlNoise( m0, ( PRNG.random() * 0.1 ) / unit ) );
+        m1.add( curlNoise( m1, ( PRNG.random() * 0.1 ) / unit ) );
+        m2.add( curlNoise( m2, ( PRNG.random() * 0.1 ) / unit ) );
 
         count--;
         subdivide(count, p0, m0, p1 );
@@ -38,9 +40,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var a = new Point( 0, -s);
     var b = new Point( s, s);
     var c = new Point( -s, s);
-    ctx.beginPath();
     subdivide(8, a,b,c );
-    ctx.stroke();
 
     function curlNoise( p, delta ){
 
@@ -61,5 +61,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

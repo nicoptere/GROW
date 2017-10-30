@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>badges</title>
+</head>
+<body>
+
+    <script src='vendor/pdfmake.min.js'></script>
+    <script src='vendor/vfs_fonts.js'></script>
+    <script src="../utils/PRNG.js"></script>
+    <script src="data.js"></script>
+
+    <script>
+
+        /*
+        LOGO
+        2017
+        nom / prénmom
+        type :
+            0 workshop
+            1 conférences
+            2 speaker
+            3 new kids
+            4 bac à sable
+            5 staff
+            6 extra
+        User    ID
+        Gen     ID
+        TYPE
+            0 Positif
+            1 Negatif
+        Secret  ID
+        Badge   ID / 149
+        */
+
+        function createBadge(id, recursive){
+
+            var user = data.getUser(id);
+
+            pdfMake.fonts = {
+                arial: {
+                    normal: 'arial.ttf',
+                    bold: 'arialb.ttf',
+                    italics: 'ariali.ttf',
+                    bolditalics: 'arialbi.ttf'
+                }
+            };
+            var dd = {
+                pageSize: 'A5',
+                pageOrientation: 'portrait',
+
+                footer: function() {
+                    return {
+                        text : id + ' / 149',
+                        fontSize: 7,
+                        alignment : 'center'
+                    };
+                },
+
+                background : {
+                    image: whiteDataUrl,
+                    width: 440,
+                    height: 630,
+                    alignment: 'center',
+                    margin: [0, -10, 0, 0],
+                },
+
+                content: [
+                    {
+                        table: {
+                            widths: ["32%", '*', '32%'],
+                            body: [
+                                ['', {
+                                    image: 'logo',
+                                    fit: [173, 173],
+                                    alignment: 'center'
+                                }, ''],
+                                ['', {
+                                    text: ( "GROW PARIS - LE TANK - 17 &| 18 NOVEMBRE 2017" ).toUpperCase(),
+                                    margin: [0, 0, 0, 10],
+                                    fontSize: 7,
+                                    alignment: 'center'
+                                }, ''],
+                                ['', {
+                                    text: user.type.toUpperCase(),
+                                    fontSize:10,
+                                    alignment: 'right',
+                                    italics: true
+                                }, ''],
+                                ['', {text: ' ', fontSize:4, alignment: 'right' }, ''],
+                                ['', {text: user.name.toUpperCase(), fontSize:10.85 }, ''],
+                                ['', {text: 'UID : ' + user.UID } , ''],
+                                ['', {text: 'SID : ' + user.SID } , ''],
+                                ['', {text: 'GEN : ' + user.GEN } , ''],
+                                ['', {text: 'VER : ' + user.NEG } , ''],
+                                ['', {text: 'E.T. : ' + user.evilTwin} , ''],
+                            ]
+                        },
+                        margin: [0, 100, 90, 0],
+                        layout: 'noBorders'
+                    }
+                ],
+                images: {
+                    logo: dataUrl
+                },
+                defaultStyle: {
+                    font: 'arial',
+                    fontSize: 8,
+                    alignment: 'jusitfy',
+                    color: '#000000',
+                    margin: [0,150,0,0]
+                }
+            };
+
+            pdfMake.createPdf(dd).download( user.id + '_b.pdf', function () {
+                console.log( id, "done" );
+                if( Boolean( recursive ) === true ){
+                    id++;
+                    if( id < data.users.length ) {
+                        setTimeout( createBadge, 10, id, recursive );
+                    }
+                }
+            });
+
+        }
+
+        var dataUrl;
+        var canvas = document.createElement("canvas");
+        canvas.width = 10;
+        canvas.height = 10;
+
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FFF";
+        ctx.fillRect(0,0,100,100);
+        var whiteDataUrl = canvas.toDataURL('image/png');
+
+        function onLoad( e ){
+
+            var img = data.getLogo();
+            var canvas = document.createElement('canvas');
+            canvas.width  = img.width * 10;
+            canvas.height = img.height * 10;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage( img, 0,0, canvas.width, canvas.height );
+            dataUrl = canvas.toDataURL('image/png');
+            createBadge( 0, true );
+
+        }
+        window.onload = function(){
+
+            data.load( onLoad );
+
+        };
+
+    </script>
+
+</body>
+</html>

@@ -62,12 +62,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     }
     ctx.save();
-    // ctx.beginPath();
-    // ctx.arc( 0, 0, 0.5 * s, 0, PI * 2 );
-    // ctx.clip();
-
-    // ctx.shadowColor = "#000";
-    // ctx.shadowBlur = 2 * unit;
     tris.forEach(function (q, i) {
         var v = 0xFF - ( i % 0xFF );
         ctx.strokeStyle = "#000";
@@ -84,5 +78,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.restore();
     ctx.restore();
 
+    return LANDSCAPE;
 
 };

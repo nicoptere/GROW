@@ -46,21 +46,16 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
 
             var rn = PRNG.centralDifference( p.x, p.y, sca, 2 );
-            //
-            // p.x += rn[0] * delta * unit;
-            // ctx.lineTo( p.x, p.y );
             sca = 1 - ( dist / c.radius );// * 0.01;
-            p.y += Math.sin( sca * PI2 ) * delta * unit;
+            p.y += Math.sin( sca * PI2 ) * delta ;//* unit;
             g.disc( p, 1 + unit * Math.abs( sca * 5 ) )
             i++;
 
         }
-        // ctx.lineTo( e.x, e.y );
-        // ctx.stroke();
-
     }
 
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

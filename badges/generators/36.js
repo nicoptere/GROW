@@ -29,7 +29,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2 * unit;
     ctx.lineJoin = "round";
-    var convex = hull(points, 40 );
+    var convex = hull(points, 40 * unit );
     // g.polyline(convex, true);
 
     points = convex.map( function( p, i, a ){
@@ -79,4 +79,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.restore();
 
+    return LANDSCAPE;
 };

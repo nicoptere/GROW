@@ -100,6 +100,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         return acc;
     }
 
-    ctx.restore()
+    ctx.restore();
+    return LANDSCAPE;
 
 };

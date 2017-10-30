@@ -22,10 +22,10 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
         var y = Math.sin( angle ) * radius;
         points.push([x,y]);
 
-        g.disc( x,y, 2* unit );
+        g.disc( x,y, 2 * unit );
         ctx.moveTo(x,y);
-        var sca = .0005;
-        var ang = ( PRNG.FBM( x * sca, y * sca ) * Math.PI * 4 ) + Date.now() * 0.001;
+        var sca = .0005 / unit;
+        var ang = ( PRNG.FBM( x * sca, y * sca ) * Math.PI * 4 );
 
         x += Math.cos( ang ) * radius * .25;
         y += Math.sin( ang ) * radius * .25;
@@ -49,7 +49,7 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
 
     points.forEach(function( p, i ){
         ctx.globalAlpha = 1 - weights[i]/max;
-        g.disc( p[0],p[1], unit + unit * weights[i] );
+        g.disc( p[0],p[1], unit * weights[i] );
     });
 
     for( i = 0; i < tris.length; ){
@@ -57,9 +57,9 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     }
 
     function grow( ctx, ps, a, b, c ){
-        weights[a] += unit;
-        weights[b] += unit;
-        weights[c] += unit;
+        weights[a] += 1;
+        weights[b] += 1;
+        weights[c] += 1;
         ps[a][2] += 1;
         ps[b][2] += 1;
         ps[c][2] += 1;
@@ -92,5 +92,7 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
 
     }
     ctx.restore();
+
+    return PORTRAIT;
 
 }

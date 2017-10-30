@@ -13,11 +13,11 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var step = PI * 2 / tot;
     var r = s * Math.sqrt( 2 ) * .5;
 
-    for( var k = 25 * unit; k  < 100 * unit; k += unit * 25 ){
+    var cell = s/1000;
+    for( var k = 25 * cell; k  < 100 * cell; k += cell * 25 ){
 
         var tot = s / k;
         ctx.shadowBlur = k;
-
 
         var ox = PRNG.random() * s;
         var oy = PRNG.random() * s;
@@ -62,4 +62,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
     ctx.restore();
 
+    return LANDSCAPE;
 }

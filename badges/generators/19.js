@@ -19,11 +19,11 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
             var tot = 100;
             for ( var k = 0; k < tot; k+=.5 ){
 
-                ctx.lineWidth = map( k, 0, tot, unit, s/100 * unit, unit );
+                ctx.lineWidth = map( k, 0, tot, unit, s/100, unit );
                 ctx.globalAlpha = k/tot;
 
                 var a = PRNG.FBM( (ox + x) * sca, ( oy+y ) * sca, 1 ) * Math.PI * 2;
-                if( isNaN( a ) )console.log( a );
+                //if( isNaN( a ) )console.log( a );
                 ctx.beginPath();
                 ctx.moveTo( x, y );
 
@@ -38,4 +38,5 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     }
     ctx.restore();
 
+    return LANDSCAPE;
 };

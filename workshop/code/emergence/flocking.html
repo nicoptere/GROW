@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>emergence flocking</title>
+
+    <style>
+        html, body{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+            top:0;
+            left:0;
+            margin:0;
+            padding:0;
+        }
+        canvas{
+            position: absolute;
+            z-index: 0;
+        }
+        form{
+            position: absolute;
+            z-index: 10;
+            padding: 20px;
+        }
+        div{
+            display: inline;
+        }
+    </style>
+
+</head>
+<body>
+
+
+    <!--<canvas id="canvas"></canvas>-->
+    <form id="params">
+        <label for="separate">separation <div id="sepLabel"></div></label><br>
+        <input type="range" id="separate" min="0" max="1" value="0" step=".01"><br>
+        <label for="cohesion">cohesion <div id="cohLabel"></div></label><br>
+        <input type="range" id="cohesion" min="0" max="1" value="0" step=".01"><br>
+        <label for="alignment">alignment <div id="aliLabel"></div></label><br>
+        <input type="range" id="alignment" min="0" max="1" value=".8" step=".01"><br>
+        <label for="friction">friction <div id="friLabel"></div></label><br>
+        <input type="range" id="friction" min="0.01" max="1" value=".7" step=".01"><br>
+    </form>
+
+    <script src="../Point.js"></script>
+    <script src="flocking.js"></script>
+
+</body>
+</html>

@@ -25,7 +25,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
         ctx.restore();
         ctx.save();
-        ctx.globalAlpha = .1 * unit;
+        ctx.globalAlpha = .1;
         ctx.translate( s/2, s/2 + y );
         ctx.scale( r, .5 );
         circle.update( s, true );
@@ -37,4 +37,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.fillStyle = "#000";
     ctx.restore();
 
+    return LANDSCAPE;
 }

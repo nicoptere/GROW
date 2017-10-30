@@ -10,7 +10,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.save();
     ctx.translate(s/2, s/2);
     ctx.lineWidth = 1 * unit;
-    ctx.globalAlpha = .1;// * unit;
+    ctx.globalAlpha = .15;// * unit;
     var circle = new Circle( 25, normal, radiusIn, radiusOut );
     for( var i = 0; i < 40; i++  ){
 
@@ -20,4 +20,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     }
     ctx.restore();
+    return PORTRAIT;
 }

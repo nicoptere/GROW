@@ -114,6 +114,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         }
 
     })
-
+    return PORTRAIT;
 
 };

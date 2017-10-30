@@ -10,9 +10,9 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var tot = 5
     function subdivide( count, p0, p1, p2 ) {
 
-        p0.normalize(s/Math.sqrt(2));
-        p1.normalize(s/Math.sqrt(2));
-        p2.normalize(s/Math.sqrt(2));
+        p0.normalize(s/2.5);//Math.sqrt(2));
+        p1.normalize(s/2.5);//Math.sqrt(2));
+        p2.normalize(s/2.5);//Math.sqrt(2));
 
         var c = p0.clone().add(p1).add( p2).multiplyScalar(1/3);
         if( count === 0 ){
@@ -44,9 +44,9 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             var m1 = p1.pointAt( .5, p2 );
             var m2 = p2.pointAt( .5, p0 );
 
-            m0.add( curlNoise( m0, 0.01 ) );
-            m1.add( curlNoise( m1, 0.01 ) );
-            m2.add( curlNoise( m2, 0.01 ) );
+            m0.add( curlNoise( m0, 0.01 / unit ) );
+            m1.add( curlNoise( m1, 0.01 / unit ) );
+            m2.add( curlNoise( m2, 0.01 / unit ) );
 
             if( PRNG.random()>.15 ) subdivide(count, p0, m0, m2 );
             if( PRNG.random()>.15 ) subdivide(count, m0, p1, m1 );
@@ -85,5 +85,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return PORTRAIT;
 
 };

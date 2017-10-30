@@ -11,6 +11,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var i=0;
     ctx.save();
     ctx.translate( s/2,s/2 );
+    var sca = .0005 / unit;
     for ( var angle = 0; angle <= total; angle+=ga ){
 
         var radius = map( angle, 0, total, minRadius, maxRadius );
@@ -18,7 +19,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         var y = Math.sin( angle ) * radius;
         points.push([x,y]);
         ctx.moveTo(x,y);
-        var sca = .0005;
         var ang = ( PRNG.FBM( x * sca, y * sca ) * Math.PI * 4 ) + PRNG.random();
         x += Math.cos( ang ) * radius * .25;
         y += Math.sin( ang ) * radius * .25;
@@ -100,4 +100,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         return false;
 
     }
+    return PORTRAIT;
 }

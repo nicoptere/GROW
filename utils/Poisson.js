@@ -30,7 +30,7 @@ var Poisson = function( exports )
 
             while( !added ){
 
-                var rid = ~~( Math.random() * processList.length );
+                var rid = ~~( PRNG.random() * processList.length );
                 var point = processList[ rid ];
                 var newPoint = generateRandomPointAround( point, radius );
 
@@ -88,8 +88,8 @@ var Poisson = function( exports )
 
     function generateRandomPointAround( point, mindist )
     {
-        var r1 = Math.random();
-        var r2 = Math.random();
+        var r1 = PRNG.random();
+        var r2 = PRNG.random();
         var radius = mindist * ( r1 + 1);
         var angle = 2 * Math.PI * r2;
         var newX = point.x + radius * Math.cos(angle);

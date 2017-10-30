@@ -39,7 +39,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
             tmp.copy( n ).multiplyScalar(sca).add( p );
 
-            var cn = curlNoise( tmp, .01 ).multiplyScalar(.04);
+            var cn = curlNoise( tmp, .01 / unit ).multiplyScalar(.04);
             n.add( cn );
 
 
@@ -88,5 +88,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         return new Point( x , y , z ).normalize().multiplyScalar( divisor );
 
     }
+    return LANDSCAPE;
 
 };

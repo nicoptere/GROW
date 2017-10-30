@@ -70,7 +70,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.drawImage( segment( ctx.canvas, s, 8), 0,0 );
 
     ctx.restore();
-
+    return LANDSCAPE;
 
 };
 

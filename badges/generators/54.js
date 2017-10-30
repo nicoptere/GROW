@@ -7,14 +7,10 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.translate( s/2, s/2 );
 
 
-    var points = distribution.sphereUniform( 100, s/3 );
-    // points.sort( function( a,b ){
-    //     return PRNG.random() > .5 ? - 1 : 1;
-    // });
+    var points = distribution.sphereUniform( 100, s/4 );
     var normals = [];
     points.forEach(function( p ){
         normals.push( p.clone().normalize() );
-        // p.y += s / 4
     });
 
     var t = new Point();
@@ -27,15 +23,14 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         for ( var i = 0; i < tot; i++ ) {
 
 
-            p.add( n.normalize( lerp( i/tot, 10, s/Math.sqrt( 2 ) ) * 1/tot ) );
-            p.add( curlNoise( n, .5 ) );
+            p.add( n.normalize( lerp( i/tot, 10 * unit, s/Math.sqrt( 2 ) ) * 1/tot ) );
+            p.add( curlNoise( n, .5 / unit ) );
 
             var r = Math.max( 0, 100 * unit * noise.perlin3(p.x*sca, p.y*sca, p.z*sca ) );
             if( r === 0 ) return;
             g.disc(p, r );
 
         }
-        // ctx.stroke();
 
     });
 
@@ -60,5 +55,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

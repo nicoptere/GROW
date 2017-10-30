@@ -5,6 +5,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
     ctx.save();
     ctx.translate( s/2, s/2 );
+    ctx.rotate( PI/2 );
 
     function pointLineDistance( p, a,b ){
         var pp = geomUtils.project(p, a,b );
@@ -54,5 +55,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     });
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

@@ -73,5 +73,6 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             ctx.lineTo( p.x, p.y );
         });
     }
+    return LANDSCAPE;
 
 };

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>exercice</title>
+</head>
+<body>
+
+    <script src="base.js"></script>
+    <script>
+
+        ctx.translate( w/2, h/2 );
+        var size = Math.min( w,h ) / 3;
+        var radius = size;
+        var step = size / 2;
+
+        ctx.arc( 0,0, size, 0, PI * 2 );
+        ctx.stroke();
+
+        var count = 6;
+        for( var i = 0; i < count; i++ ){
+
+            var x = lerp( i / count, -size, size )
+
+            ctx.beginPath();
+            ctx.arc( x, 0, 5, 0, PI * 2 );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc( x, 0, i * ( size / count ), 0, PI * 2 );
+            ctx.stroke();
+
+        }
+    </script>
+
+</body>
+</html>

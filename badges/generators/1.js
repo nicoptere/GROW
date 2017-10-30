@@ -10,6 +10,7 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     var ran = PRNG.random();
     var sca = ( .001 + ran * 0.001 )  / unit;
     // g.ctx.globalAlpha = .2;
+    ctx.lineCap = "round";
     ctx.lineJoin = "round";
     for( var i = 0; i < count; i++ ){
 
@@ -21,15 +22,15 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
             var tot = 100;
             for ( var k = 0; k < tot; k+=.25 ){
 
-                ctx.lineWidth = map( k, 0, tot, unit, s/100 * unit, unit );
+                ctx.lineWidth = map( k, 0, tot, unit, s / ( 20 * unit ), unit );
 
-                var a = PRNG.FBM( x * sca, y* sca, 1 ) * Math.PI * 2;
+                var a = PRNG.FBM( x * sca, y * sca, 1 ) * Math.PI * 2;
 
                 ctx.beginPath();
                 ctx.moveTo( x, y );
 
-                x += Math.cos( a ) * s/100;
-                y += Math.sin( a ) * s/100;
+                x += Math.cos( a ) * s / ( 100 * unit);
+                y += Math.sin( a ) * s / ( 100 * unit);
 
                 ctx.lineTo( x, y );
                 ctx.stroke();
@@ -38,5 +39,5 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
         }
     }
     ctx.restore();
-
+    return LANDSCAPE;
 };

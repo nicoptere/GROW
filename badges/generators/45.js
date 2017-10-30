@@ -17,6 +17,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         this.length = this.restLength;
 
         var temp = new P3();
+        var sca = 1 / unit;
         this.applyConstraints = function(){
 
             this.temp = this.temp.copy( this.p0 ).sub( this.p1 );
@@ -26,7 +27,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
             this.temp.multiplyScalar( this.length ).multiplyScalar( 0.5 ).multiplyScalar( Spring.damping );
 
             temp.copy( this.p0 ).multiplyScalar( .01 );
-            this.temp.multiplyScalar( PRNG.FBM( temp.x, temp.y, 3 ) )
+            this.temp.multiplyScalar( PRNG.FBM( temp.x * sca, temp.y * sca, 3 ) )
 
             if( !this.p0.fixed ) this.p0.sub( this.temp );
             if( !this.p1.fixed ) this.p1.add( this.temp );
@@ -86,13 +87,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         });
 
         springs.forEach(function (s) {
-
             s.applyConstraints();
-            // if( iteration % 10 == 0 ){
-            //     ctx.globalAlpha = .01;// - getDistance(s.p0, s.p1);
-            //     g.line( s.p0, s.p1 );
-            // }
-
         });
 
         var minZ = Number.POSITIVE_INFINITY;
@@ -105,19 +100,14 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         points.forEach(function( p,i ){
             ctx.beginPath();
             ctx.globalAlpha = 1 - ( .25 + .75 * norm( p.z, minZ, maxZ ) );
-            // ctx.lineWidth = norm( p.z, minZ, maxZ ) * 5 * unit;
-            // ctx.moveTo( p.lx, p.ly );
-            // ctx.lineTo( p.x, p.y );
-            // ctx.stroke();
             ctx.arc( p.x, p.y, ( 1 + norm( p.z, minZ, maxZ ) ) * unit, 0, Math.PI * 2 );
             ctx.fill();
         } );
 
         if( iteration-- > 0 ){
-            console.log( iteration );
+            //console.log( iteration );
             ctx.restore();
             update();
-            // requestAnimationFrame(update);
         }else{
 
             springs.forEach(function (s) {
@@ -158,24 +148,8 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         }
     }
 
-    // for ( var i = 0; i < 2500; i++ ) {
-    //     var p0 = points[~~(PRNG.random() * points.length)];
-    //     var p1 = points[~~(PRNG.random() * points.length)];
-    //     var sp = new Spring(p0, p1, s / 4 + PRNG.random() * s / 3);
-    //     springs.push(sp);
-    // }
-
-    // make it converge early
-    // i = 50;
-    // console.time('t');
-    // while( i-- ){
-    //     springs.forEach(function (s) {
-    //         s.applyConstraints();
-    //     });
-    // }
-    // console.timeEnd('t');
-
     update();
+    return PORTRAIT;
 
 
 };

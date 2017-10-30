@@ -26,7 +26,7 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
 
             var tot = 100;
             ctx.beginPath();
-            ctx.lineWidth = Math.sqrt( PRNG.random() ) * s/100 * unit;
+            ctx.lineWidth = Math.sqrt( PRNG.random() ) * s/100;// * unit;
             for ( var k = 0; k < tot; k++ ){
 
 
@@ -45,4 +45,5 @@ generators[ genId++ ] = function( g, ctx, s, seed, unit ){
     }
     ctx.restore();
 
+    return LANDSCAPE;
 };

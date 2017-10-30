@@ -14,13 +14,13 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.save();
     ctx.translate( s/2,s/2 );
     var points = [];
+    var sca = .001 / unit;
     for ( var angle = 0; angle <= total; angle+=ga ){
 
         var radius = map( angle, 0, total, minRadius, maxRadius );
         var x = Math.cos( angle ) * radius;
         var y = Math.sin( angle ) * radius * .62;
 
-        var sca = .001;
         var ang = ( PRNG.FBM_legacy( x * sca, y * sca, 2 ) * Math.PI * 4 );
 
         x += Math.cos( ang ) * radius * .25;
@@ -31,20 +31,20 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     }
     ctx.fillStyle = "#000";
 
-    var convex = hull(points, 20 );
+    var convex = hull( points, 20 * unit );
     g.polygon(convex, true);
 
 
-    ctx.globalAlpha = .5
-    convex = hull(points, 50 );
+    ctx.globalAlpha = .5;
+    convex = hull(points, 50 * unit );
     ctx.lineWidth = 2 * unit;
     g.polyline(convex, true);
 
-    convex = hull(points, 70 );
+    convex = hull(points, 70 * unit);
     ctx.lineWidth = unit;
     g.polyline(convex, true);
 
-    ctx.globalAlpha = 1
+    ctx.globalAlpha = 1;
     points.forEach(function (p){
 
         var x = p[0];
@@ -58,5 +58,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     });
 
     ctx.restore();
+    return PORTRAIT;
+
 
 };

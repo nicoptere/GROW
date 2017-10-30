@@ -5,7 +5,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var turns = 10;
     var total = Math.PI * 2  * turns;
     var minRadius = s/8;
-    var maxRadius = minRadius + s/6;
+    var maxRadius = minRadius + s/5;
     var ga = ( ( 1 + Math.sqrt(5) ) / 2 ) / 5;
 
     var i = 0;
@@ -30,18 +30,19 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.lineJoin = "round";
 
     var it = 5;
-    for( i = 10; i < 150; i += it ){
+    for( i = 10; i < 140; i += it ){
 
         ctx.globalAlpha = .1;
-        var convex = hull(points, i );
+        var convex = hull(points, i * unit );
         g.polygon(convex, true);
         g.polyline(convex, true);
         it *= 2;
 
     }
     ctx.globalAlpha = 1;
-    ctx.stroke()
+    ctx.stroke();
 
     ctx.restore();
+    return LANDSCAPE;
 
 };

@@ -14,10 +14,10 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
 
         ctx.translate( 0, -step * ( 1 / sy ) );
 
-        var r = Math.sin( map( i, -s/3, s/3, 0, Math.PI ) );
+        var r = Math.sin( map( i, -s/3, s/3, 0, Math.PI ) ) * .95;
 
         ctx.beginPath();
-        var nx = PRNG.FBM( i * 0.01, r, 6 ) * 20;
+        var nx = PRNG.FBM( i * 0.01/unit, r, 6 ) * 20;
         ctx.rect( nx, 0, r * s / 3, r * s / 3);
         ctx.fill();
         ctx.stroke();
@@ -26,4 +26,5 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     ctx.fillStyle = "#000";
     ctx.restore();
 
+    return LANDSCAPE;
 }

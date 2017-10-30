@@ -48,6 +48,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
     var points = distribution.sphereUniform( 10000, s/3 );
 
     update();
+    return PORTRAIT;
 
 
 };
