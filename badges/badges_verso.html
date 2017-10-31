@@ -46,6 +46,7 @@
                     bolditalics: 'arialbi.ttf'
                 }
             };
+
             var dd = {
                 pageSize: 'A5',
                 pageOrientation: 'portrait',
@@ -63,7 +64,7 @@
                     width: 440,
                     height: 630,
                     alignment: 'center',
-                    margin: [0, -10, 0, 0],
+                    margin: [0, -10, 0, 0]
                 },
 
                 content: [
@@ -113,7 +114,7 @@
                 }
             };
 
-            pdfMake.createPdf(dd).download( user.id + '_b.pdf', function () {
+            pdfMake.createPdf(dd).download( user.id + '_v.pdf', function () {
                 console.log( id, "done" );
                 if( Boolean( recursive ) === true ){
                     id++;
@@ -144,7 +145,7 @@
             var ctx = canvas.getContext('2d');
             ctx.drawImage( img, 0,0, canvas.width, canvas.height );
             dataUrl = canvas.toDataURL('image/png');
-            createBadge( 0, true );
+            createBadge( 0, false );
 
         }
         window.onload = function(){

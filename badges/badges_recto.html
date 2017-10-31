@@ -221,7 +221,7 @@
                     };
             }
 
-            pdfMake.createPdf( dd ).download( user.id + '_a.pdf', function () {
+            pdfMake.createPdf( dd ).download( user.id + '_r.pdf', function () {
                 console.log( user.id, "done" );
 
                 if( Boolean( recursive ) === true ){
@@ -273,7 +273,7 @@
 
                 dataUrl = g.ctx.canvas.toDataURL('image/png');
 
-                savePDF( user, dataUrl, orientation, false );
+                savePDF( user, dataUrl, orientation, true );
 
 //                save( g.ctx, id );//, saveNext );
 

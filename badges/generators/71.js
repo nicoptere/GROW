@@ -176,7 +176,7 @@ generators[ genId++ ] = function(g, ctx, s, seed, unit) {
         });
         return acc;
     }
-    ctx.restore()
-    return PORTRAIT;
+    ctx.restore();
+    return LANDSCAPE;
 
 };
