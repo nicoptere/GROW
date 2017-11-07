@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title>badges</title>
     <style>
-        /*html,*/
-        /*body {*/
-            /*width: 100%;*/
-            /*height: 100%;*/
-            /*!*overflow: hidden;*!*/
-            /*top: 0;*/
-            /*left: 0;*/
-            /*margin: 0;*/
-            /*padding: 0;*/
-        /*}*/
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            /*overflow: hidden;*/
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -164,126 +164,19 @@
     <script src="generators/73.js"></script>
     <script src="generators/74.js"></script>
 
-
-    <script src="data.js"></script>
-    <script src="save.js"></script>
-
     <script>
 
-        /*
-        LOGO
-        2017
-        nom / prénmom
-        type :
-        0 workshop
-        1 conférences
-        2 speaker
-        3 new kids
-        4 bac à sable
-        5 staff
-        6 extra
-        Gen     ID
-        TYPE    0 Positif / 1 Negatif
-        User    ID
-        Secret  ID
-        Badge   ID
-        */
-
-        function savePDF( user, dataUrl, orientation, recursive ){
-
-            var s = orientation == LANDSCAPE ? 610 : 420
-            var margin = orientation == LANDSCAPE ? 7.5 : 15;
-            var offset = orientation == LANDSCAPE ? - 15: 110 - margin * 2;
-
-            var dd = {
-                pageSize: 'A5',
-                pageOrientation: 'portrait',
-                // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
-                pageMargins: [ 0, 0, 0, 0 ],
-                content: [
-                    {
-                        image: dataUrl,
-                        width: s + margin * 2,
-                        height: s + margin * 2,
-                        alignment: 'center',
-                        margin: [0, offset, 0, 0],
-                    }
-                ]
-            };
-
-            if( user.NEG == 1 && orientation === PORTRAIT ){
-                dd.background = {
-                        image: blackDataUrl,
-                        width: 440+margin*2,
-                        height: 610+margin*2,
-                        alignment: 'center',
-                        margin: [0, -margin * 1.5, 0, 0],
-                    };
-            }
-
-            pdfMake.createPdf( dd ).download( user.id + '_r.pdf', function () {
-                console.log( user.id, "done" );
-
-                if( Boolean( recursive ) === true ){
-                    var id = user.id;
-                    id++;
-                        setTimeout( saveNext, 10, id );
-                }
-            });
-
-        }
-
-        ///////////////////////////////////////////////////////////////////
-
-        var maxGen = --genId;
-        var dataUrl;
-        var blackDataUrl;
         var g = new Graphics();
         g.ctx = g.getContext( 1, 1 );
         document.body.appendChild(g.ctx.canvas);
 
-        var tg = new Graphics();
-        tg.ctx = g.getContext( 1, 1 );
+        var busy = false;
+        function render(){
 
-        var debug = false;
-        window.onload = function(){
+            if( busy ) return;
+            busy = true;
 
-            tg.ctx.canvas.width = 10;
-            tg.ctx.canvas.height = 10;
-            tg.ctx.fillRect(0,0,100,100);
-            blackDataUrl = tg.ctx.canvas.toDataURL('image/png');
-
-            data.load( onLoad );
-
-        };
-
-        function onLoad( e ) {
-
-            saveNext( 0 );
-
-        }
-
-        function saveNext( id ){
-
-            if( id < data.users.length ) {
-
-                var user = data.getUser( id );
-
-                var orientation = render( user );
-
-                dataUrl = g.ctx.canvas.toDataURL('image/png');
-
-//                savePDF( user, dataUrl, orientation, true );
-//                save( g.ctx, id );//, saveNext );
-
-            }else{
-                console.log(  'over' );
-            }
-        }
-
-        function render( user ){
-
-            var s = 4252;
+            var s = user.size;
             var unit = 0.001 * s;
             g.ctx.canvas.width  = s;
             g.ctx.canvas.height = s;
@@ -294,34 +187,10 @@
             ctx.fillStyle = "#000";
             ctx.lineWidth = unit;
 
-            var orientation = generators[ user.GEN ]( g, ctx, s, user.UID, unit );
+            generators[ user.GEN ]( g, ctx, s, user.UID, unit );
+            if( user.negative )negate(s);
 
-            if( debug ){
-
-                var s = 1000;
-                var unit = 0.001 * s;
-                tg.ctx.canvas.width  = s;
-                tg.ctx.canvas.height = s;
-
-                tg.ctx.fillStyle = "rgba( 0,0,0,0 )";
-                tg.ctx.fillRect( 0,0,s,s );
-                tg.ctx.fillStyle = "#F00";
-                tg.ctx.lineWidth = unit;
-
-                generators[ user.GEN ]( tg, tg.ctx, s, user.UID, unit );
-
-                red( s, tg.ctx );
-                ctx.globalCompositeOperation = 'multiply';
-                ctx.drawImage(
-                    tg.ctx.canvas,
-                    0, 0, 4252,4252
-                );
-
-            }
-
-            if( user.NEG === 1 )negate(s);
-
-            return orientation;
+            busy = false;
         }
 
         function negate(s) {
@@ -335,18 +204,26 @@
             g.ctx.putImageData(imd,0,0);
         }
 
-        function red(s, ctx) {
-            var imd = ctx.getImageData(0,0,s,s);
-            var i = imd.data.length;
-            while( i-=4 ){
-                var a = imd.data[i];
-                imd.data[i]     = 0xFF;
-                imd.data[i+1]   = 0;
-                imd.data[i+2]   = 0;
-            }
-            ctx.putImageData(imd,0,0);
-        }
 
+        //setup
+
+        var user = {
+            size:1000,
+            GEN:0,
+            negative:false,
+            UID:0
+        };
+        window.onload = function(){
+
+            var gui = new dat.GUI();
+            gui.add( user, 'size', 0, 4096, 1 ).onChange(render);
+            gui.add( user, 'UID', 0, 10000, 1 ).onChange(render);
+            gui.add( user, 'GEN', 0, 74, 1 ).onChange(render);
+            gui.add( user, 'negative' ).onChange(render);
+
+            render();
+
+        };
 
 
     </script>
